@@ -15,9 +15,9 @@ export class GymsController {
   })
   @Post('create')
   async create(@Body() createGymDto: CreateGymDto) {
-    try{
+    try {
       return this.gymsService.create(createGymDto);
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
   }
@@ -27,9 +27,9 @@ export class GymsController {
   })
   @Get('')
   async findAll() {
-    try{
+    try {
       return this.gymsService.findAll();
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
   }
@@ -39,9 +39,9 @@ export class GymsController {
   })
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try{
+    try {
       return this.gymsService.findOne(id);
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
   }
@@ -51,9 +51,9 @@ export class GymsController {
   })
   @Patch(':id/update')
   async update(@Param('id') id: string, @Body() updateGymDto: UpdateGymDto) {
-    try{
+    try {
       return this.gymsService.update(id, updateGymDto);
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
   }
@@ -63,9 +63,9 @@ export class GymsController {
   })
   @Patch(':id/disable')
   async remove(@Param('id') id: string) {
-    try{
+    try {
       return this.gymsService.remove(id);
-    }catch(err){
+    } catch (err) {
       console.error(err);
     }
   }

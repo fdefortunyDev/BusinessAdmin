@@ -11,9 +11,7 @@ import { ROLES_KEY } from './roles.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(
-    private reflector: Reflector,
-  ) {
+  constructor(private reflector: Reflector) {
     super();
   }
 
@@ -42,9 +40,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return false;
     }
 
-    const allPermissions = getRolesAndPermissions(
-      getPermissionsAccesses(user),
-    );
+    const allPermissions = getRolesAndPermissions(getPermissionsAccesses(user));
 
     return requiredRoles.some((role) =>
       allPermissions.find((permission) => permission.role === role),

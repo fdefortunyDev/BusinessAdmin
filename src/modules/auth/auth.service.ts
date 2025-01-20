@@ -7,8 +7,8 @@ import 'dotenv/config';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService, 
-    private readonly configService: ConfigService
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async encryptPassword(password: string): Promise<string> {
@@ -24,7 +24,7 @@ export class AuthService {
     return apiKey === this.configService.get('API_KEY');
   }
 
-    // async sign(payload: any, isAccessToken: boolean): Promise<string> {
+  // async sign(payload: any, isAccessToken: boolean): Promise<string> {
   //   return this.jwtService.sign(
   //     { data: payload },
   //     {
