@@ -1,44 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { CreateGymDto } from './dtos/create-gym.dto';
 import { GymsRepositoryService } from '../../repository/gyms/gyms.repository.service';
 import { UpdateGymDto } from './dtos/update-gym.dto';
-import { IGym } from '../../repository/gyms/dtos/in/gym.interface';
+import { GymsError } from '../../utils/errors/gyms-error.enum';
+import { IGymResponse } from '../../repository/gyms/dtos/out/gym-response.interface';
 
 @Injectable()
 export class GymsService {
   constructor(private readonly gymRepositoryService: GymsRepositoryService) {}
 
   async create(createGymDto: CreateGymDto) {
-    const gymData: IGym = {
+    const createdGym: IGymResponse = await this.gymRepositoryService.create({
       name: createGymDto.name,
       address: createGymDto.address,
       email: createGymDto.email,
       phone: createGymDto.phone ?? '',
       website: createGymDto.website ?? '',
-    };
-    return this.gymRepositoryService.create(gymData);
+    });
+
+    if(!createdGym) {
+      throw new ServiceUnavailableException(GymsError.notCreated);
+    }
+
+    return createdGym;
   }
 
   async findAll() {
-    return this.gymRepositoryService.findAll();
+    return await this.gymRepositoryService.findAll();
   }
 
   async findOne(id: string) {
-    return this.gymRepositoryService.findOne(id);
+    return await this.gymRepositoryService.findOne(id);
   }
 
   async update(id: string, updateGymDto: UpdateGymDto) {
-    const gymData: IGym = {
+    const updatedGym = await this.gymRepositoryService.update(id, {
       name: updateGymDto.name ?? 'name',
       address: updateGymDto.address ?? 'address',
       email: updateGymDto.email ?? 'email',
       phone: updateGymDto.phone ?? '',
       website: updateGymDto.website ?? '',
-    };
-    return this.gymRepositoryService.update(id, gymData);
+    });
+
+    if(!updatedGym) {
+      throw new ServiceUnavailableException(GymsError.notUpdated);
+    }
+
+    return updatedGym;
   }
 
   async remove(id: string) {
-    return this.gymRepositoryService.remove(id);
+    return await this.gymRepositoryService.remove(id);
   }
 }

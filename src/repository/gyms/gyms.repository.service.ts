@@ -27,7 +27,7 @@ export class GymsRepositoryService {
     const gyms: IGymResponse[] = [
       {
         id: '1',
-        name: 'SmartGym',
+        name: 'SmartGym-example',
         address: 'Ruta 8 esq cochabamba',
         email: 'example@gmail.com',
         phone: '12345678',
@@ -38,13 +38,15 @@ export class GymsRepositoryService {
       },
     ];
 
+    
+
     return gyms;
   }
 
   async findOne(id: string): Promise<IGymResponse> {
     const gym: IGymResponse = {
       id,
-      name: 'SmartGym',
+      name: 'SmartGym-example',
       address: 'Ruta 8 esq cochabamba',
       email: 'example@gmail.com',
       phone: '12345678',
@@ -76,7 +78,7 @@ export class GymsRepositoryService {
   async remove(id: string): Promise<IGymResponse> {
     const removedGym: IGymResponse = {
       id,
-      name: 'SmartGym',
+      name: 'SmartGym-example',
       address: 'Ruta 8 esq cochabamba',
       email: 'example@gmail.com',
       phone: '12345678',

@@ -14,9 +14,6 @@ async function bootstrap() {
     }),
   );
 
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-
   app.enableCors({
     origin: '*',
   });
@@ -35,6 +32,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   const configService = new ConfigService();
   await app.listen(configService.get('APP_PORT') || 4000);

@@ -12,6 +12,6 @@ import { RepositoryModule } from './repository/repository.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('/gyms/*');
+    consumer.apply(AuthMiddleware).forRoutes('/gyms');
   }
 }

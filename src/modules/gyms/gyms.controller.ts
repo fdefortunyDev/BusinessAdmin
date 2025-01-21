@@ -3,6 +3,8 @@ import { GymsService } from './gyms.service';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CreateGymDto } from './dtos/create-gym.dto';
 import { UpdateGymDto } from './dtos/update-gym.dto';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../../utils/enums/role.enum';
 
 @ApiTags('Gyms')
 @ApiSecurity('apikey')
@@ -13,6 +15,7 @@ export class GymsController {
   @ApiOperation({
     summary: 'register a new gym',
   })
+// TODO: @Roles(Role.Admin)
   @Post('create')
   async create(@Body() createGymDto: CreateGymDto) {
     try {
@@ -25,6 +28,7 @@ export class GymsController {
   @ApiOperation({
     summary: 'get all gyms',
   })
+// TODO: @Roles(Role.Admin)
   @Get('')
   async findAll() {
     try {
@@ -37,6 +41,7 @@ export class GymsController {
   @ApiOperation({
     summary: 'get one gym',
   })
+// TODO: @Roles(Role.Admin)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -49,6 +54,7 @@ export class GymsController {
   @ApiOperation({
     summary: 'update a gym',
   })
+// TODO: @Roles(Role.Admin)
   @Patch(':id/update')
   async update(@Param('id') id: string, @Body() updateGymDto: UpdateGymDto) {
     try {
@@ -61,6 +67,7 @@ export class GymsController {
   @ApiOperation({
     summary: 'disable a gym',
   })
+// TODO: @Roles(Role.Admin)
   @Patch(':id/disable')
   async remove(@Param('id') id: string) {
     try {
