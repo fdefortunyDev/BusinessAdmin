@@ -8,7 +8,13 @@ import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [PassportModule],
-  providers: [ApiKeyStrategy, AuthService, JwtService, JwtAuthGuard, ConfigService],
+  providers: [
+    ApiKeyStrategy,
+    AuthService,
+    JwtService,
+    JwtAuthGuard,
+    ConfigService,
+  ],
   exports: [AuthService, JwtAuthGuard],
 })
 export class AuthModule {}

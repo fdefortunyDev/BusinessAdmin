@@ -8,16 +8,15 @@ import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-  }));
-  
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-  
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
+
   app.enableCors({
-    origin: '*'
-  }); 
+    origin: '*',
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Gym Admin')
@@ -33,7 +32,10 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
-  
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+
   const configService = new ConfigService();
   await app.listen(configService.get('APP_PORT') || 4000);
   console.log(`Application is running on: ${await app.getUrl()}`);
