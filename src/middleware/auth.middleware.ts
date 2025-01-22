@@ -9,8 +9,8 @@ export class AuthMiddleware implements NestMiddleware {
       { session: false, failureRedirect: '/error' },
       (err, user, info) => {
         if (err || !user) {
-          if (req.url === '/health' || req.url === '/docs') {
-            return next(); // Permitir acceso sin autenticación para estas rutas
+          if (req.url === '/docs') {
+            return next(); // Permitir acceso sin autenticación para esta rutas
           }
 
           res.status(401).json({

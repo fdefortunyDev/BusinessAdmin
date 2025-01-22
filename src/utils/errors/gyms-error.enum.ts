@@ -7,4 +7,5 @@ export enum GymsError {
 
     notCreated = 'gym.error.notCreated',
     notUpdated = 'gym.error.notUpdated',
+    notFound = 'gym.error.notFound',
 }

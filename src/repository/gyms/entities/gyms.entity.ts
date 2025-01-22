@@ -5,9 +5,10 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
   } from 'typeorm';
+import { IGym } from '../dtos/out/gym.interface';
   
   @Entity('gyms')
-  export class Gyms {
+  export class Gyms implements IGym {
     @PrimaryGeneratedColumn()
     id: number;
   
@@ -16,7 +17,10 @@ import {
   
     @Column({ type: 'varchar', length: 255, nullable: false })
     address: string;
-  
+
+    @Column({ type: 'varchar', length: 255, nullable: false })
+    email: string;
+
     @Column({ type: 'varchar', length: 15, nullable: true })
     phone?: string;
   

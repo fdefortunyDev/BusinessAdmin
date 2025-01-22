@@ -1,4 +1,4 @@
-export interface IGym {
+export interface GymDataToCreate {
   name: string;
   address: string;
   email: string;

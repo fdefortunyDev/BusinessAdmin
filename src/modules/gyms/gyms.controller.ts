@@ -1,10 +1,8 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { GymsService } from './gyms.service';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { CreateGymDto } from './dtos/create-gym.dto';
-import { UpdateGymDto } from './dtos/update-gym.dto';
-import { Roles } from '../auth/roles.decorator';
-import { Role } from '../../utils/enums/role.enum';
+import { CreateGymDto } from './dtos/in/create-gym.dto';
+import { UpdateGymDto } from './dtos/in/update-gym.dto';
 
 @ApiTags('Gyms')
 @ApiSecurity('apikey')
