@@ -1,91 +1,73 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { IGym } from './dtos/out/gym.interface';
-import { GymDataToCreate } from './dtos/in/create-gym.interface';
-import { GymDataToUpdate } from './dtos/in/update-gym.interface';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Gym, GymDataToCreate } from './interfaces/gym.interface';
 import { GymsError } from '../../utils/errors/gyms-error.enum';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Gyms } from './entities/gyms.entity';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class GymsRepositoryService {
-  constructor() {}
+  constructor(
+    @InjectRepository(Gyms)
+    private readonly gymsRepository: Repository<Gyms>,
+  ) {}
 
-  async create(gymData: GymDataToCreate): Promise<IGym> {
-    const { name, address, email, phone, website } = gymData;
-    const gymToCreate: IGym = {
-      id: 1,
-      name,
-      address,
-      email,
-      phone: phone ?? '',
-      website: website ?? '',
+  async create(gymData: GymDataToCreate): Promise<any> {
+    const gymExists = await this.findOneByName(gymData.name);
+
+    if (gymExists) {
+      throw new ConflictException(GymsError.alreadyExists);
+    }
+
+    const gymToCreate = this.gymsRepository.create({
+      name: gymData.name,
+      address: gymData.address,
+      email: gymData.email,
+      phone: gymData.phone ?? '',
+      website: gymData.website ?? '',
       isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    });
 
-    return gymToCreate;
+    const createdGym = await this.gymsRepository.save(gymToCreate);
+
+    if (!createdGym) {
+      throw new NotFoundException(GymsError.notCreated);
+    }
+
+    return createdGym;
   }
 
-  async findAll(): Promise<IGym[]> {
-    const gyms: IGym[] = [
-      {
-        id: 1,
-        name: 'SmartGym-example',
-        address: 'Ruta 8 esq cochabamba',
-        email: 'example@gmail.com',
-        phone: '12345678',
-        website: 'www.smartgym.com.uy',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
-
+  async findAll(): Promise<Gym[]> {
+    const gyms: Gym[] = await this.gymsRepository.find();
     return gyms;
   }
 
-  async findOneById(id: string): Promise<IGym> {
-    const gym: IGym = {
-      id: parseInt(id),
-      name: 'SmartGym-example',
-      address: 'Ruta 8 esq cochabamba',
-      email: 'example@gmail.com',
-      phone: '12345678',
-      website: 'www.smartgym.com.uy',
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    return gym;
+  async findOneByName(name: string) {
+    return await this.gymsRepository.findOne({
+      where: { name, isActive: true },
+    });
   }
 
-  async update(id: string, gymData: GymDataToUpdate): Promise<IGym> {
-    const { name, address, email, phone, website } = gymData;
-
-    const gymToUpdate: IGym = await this.findOneById(id);
-
-    if (!gymToUpdate) {
-      throw new NotFoundException(GymsError.notFound);
-    }
-
-    //actualizar....
-
-    return gymToUpdate;
+  async findOneById(id: string): Promise<Gym | null> {
+    return await this.gymsRepository.findOne({
+      where: { id: parseInt(id), isActive: true },
+    });
   }
 
-  async remove(id: string): Promise<IGym> {
-    const removedGym: IGym = {
-      id: parseInt(id),
-      name: 'SmartGym-example',
-      address: 'Ruta 8 esq cochabamba',
-      email: 'example@gmail.com',
-      phone: '12345678',
-      isActive: false,
-      website: 'www.smartgym.com.uy',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+  async updateOne(gymToUpdate: Gym): Promise<Gym | null> {
+    return await this.gymsRepository.save(gymToUpdate);
+  }
 
-    return removedGym;
+  async remove(id: string): Promise<boolean> {
+    const result: UpdateResult = await this.gymsRepository.update(
+      { id: parseInt(id) },
+      { isActive: false },
+    );
+
+    return result.affected && result.affected > 0 ? true : false;
   }
 }
