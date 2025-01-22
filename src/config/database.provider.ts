@@ -13,7 +13,7 @@ export const databaseProviders = [
         port: configService.getOrThrow('DB_PORT'),
         username: configService.getOrThrow('DB_USER'),
         password: configService.getOrThrow('DB_PASS'),
-        database: 'test',
+        database: configService.getOrThrow('DB_ENV'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true, //TODO: change to false in production environment
       });

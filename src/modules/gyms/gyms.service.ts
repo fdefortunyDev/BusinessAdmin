@@ -1,16 +1,16 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { CreateGymDto } from './dtos/create-gym.dto';
+import { CreateGymDto } from './dtos/in/create-gym.dto';
 import { GymsRepositoryService } from '../../repository/gyms/gyms.repository.service';
-import { UpdateGymDto } from './dtos/update-gym.dto';
+import { UpdateGymDto } from './dtos/in/update-gym.dto';
 import { GymsError } from '../../utils/errors/gyms-error.enum';
-import { IGymResponse } from '../../repository/gyms/dtos/out/gym-response.interface';
+import { IGym } from '../../repository/gyms/dtos/out/gym.interface';
 
 @Injectable()
 export class GymsService {
   constructor(private readonly gymRepositoryService: GymsRepositoryService) {}
 
   async create(createGymDto: CreateGymDto) {
-    const createdGym: IGymResponse = await this.gymRepositoryService.create({
+    const createdGym: IGym = await this.gymRepositoryService.create({
       name: createGymDto.name,
       address: createGymDto.address,
       email: createGymDto.email,
@@ -30,11 +30,11 @@ export class GymsService {
   }
 
   async findOne(id: string) {
-    return await this.gymRepositoryService.findOne(id);
+    return await this.gymRepositoryService.findOneById(id);
   }
 
   async update(id: string, updateGymDto: UpdateGymDto) {
-    const updatedGym = await this.gymRepositoryService.update(id, {
+    const updatedGym: IGym = await this.gymRepositoryService.update(id, {
       name: updateGymDto.name ?? 'name',
       address: updateGymDto.address ?? 'address',
       email: updateGymDto.email ?? 'email',

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsNumberString, IsOptional, Matches, Max, MaxLength, matches } from 'class-validator';
-import { GymsError } from '../../../utils/errors/gyms-error.enum';
+import { GymsError } from '../../../../utils/errors/gyms-error.enum';
 
 export class CreateGymDto {
   @ApiProperty({ example: 'SmartGym' })
