@@ -1,12 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNumberString, IsOptional, Matches, Max, MaxLength, matches } from 'class-validator';
-import { GymsError } from '../../../../utils/errors/gyms-error.enum';
+import {
+  IsNumberString,
+  IsOptional,
+  Matches,
+  MaxLength,
+} from 'class-validator';
+import { GymsError } from '../../../utils/errors/gyms-error.enum';
 
 export class CreateGymDto {
   @ApiProperty({ example: 'SmartGym' })
   @MaxLength(150)
-  @Matches(/^[a-z0-9\s]*$/i, {
+  @Matches(/^[a-z0-9]+[-_a-z0-9]*$/i, {
     message: GymsError.invalidName,
   })
   @Transform(({ value }) => value.trim())
@@ -28,8 +33,8 @@ export class CreateGymDto {
   @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
-  @ApiProperty({ example: '12345678' })
-  @MaxLength(8)
+  @ApiProperty()
+  @MaxLength(9)
   @IsOptional()
   @IsNumberString()
   @Matches(/^(2|3|4|5|6|7|8)[0-9]{7}$|^09[0-9]{7}$/, {
@@ -38,7 +43,7 @@ export class CreateGymDto {
   @Transform(({ value }) => (value ? value.trim() : value))
   phone?: string;
 
-  @ApiProperty({ example: 'www.smartgym.com.uy' })
+  @ApiProperty()
   @MaxLength(255)
   @IsOptional()
   @Matches(/^(http|https):\/\/[a-z0-9\.-]+\.[a-z]{2,4}/i, {
