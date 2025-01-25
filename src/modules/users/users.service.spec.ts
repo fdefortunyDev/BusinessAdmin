@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { UsersRepositoryService } from '../../repository/users/users.repository.service';
 import { mockAllMethods } from '../../utils/mock-all-methods';
-import { clear } from 'console';
 
 describe('UsersService', () => {
   let usersService: UsersService;
