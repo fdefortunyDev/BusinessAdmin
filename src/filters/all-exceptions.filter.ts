@@ -9,7 +9,7 @@ import { Response } from 'express';
 
 @Catch()
 export class AllExceptionsFilter extends BaseExceptionFilter {
-  catch(exception: Error, host: ArgumentsHost) {
+  catch(exception: Error, host: ArgumentsHost): void {
     if (exception instanceof HttpException) {
       super.catch(exception, host);
     } else {

@@ -1,6 +1,23 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
+import { IUserResponse } from './dtos/user.response';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @ApiTags('Users')
 @ApiSecurity('apikey')
@@ -8,28 +25,64 @@ import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiCreatedResponse({ type: IUserResponse })
   @Post('/create')
-  async create() {
-    return await this.usersService.create();
+  async create(@Body() createUserDto: CreateUserDto): Promise<IUserResponse> {
+    try {
+      console.log('createUserDto', createUserDto);
+      return await this.usersService.create(createUserDto);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  @Get('/findAll')
-  async findAll() {
-    return await this.usersService.findAll();
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiOkResponse({ type: [IUserResponse] })
+  @Get('/')
+  async findAll(): Promise<IUserResponse[]> {
+    try {
+      return await this.usersService.findAll();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  @Get('/findOne')
-  async findOne(id: string) {
-    return await this.usersService.findOne(id);
+  @ApiOperation({ summary: 'Get one user' })
+  @Get('/:id')
+  async findOne(@Param() id: string): Promise<IUserResponse> {
+    try {
+      return await this.usersService.findOne(id);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  @Patch('/update')
-  async update(id: string) {
-    return await this.usersService.update(id);
+  @ApiOperation({ summary: 'Update one user' })
+  @Patch('/:id/update')
+  async update(
+    @Param() id: string,
+    @Body() userDataToUpdate: UpdateUserDto,
+  ): Promise<IUserResponse> {
+    try {
+      return await this.usersService.update(id, userDataToUpdate);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  @Delete('/remove')
-  async remove(id: string) {
-    return await this.usersService.remove(id);
+  @ApiOperation({ summary: 'Disable one user' })
+  @Delete('/:id/remove')
+  async remove(@Param('id') id: string): Promise<IUserResponse> {
+    try {
+      return await this.usersService.remove(id);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 }

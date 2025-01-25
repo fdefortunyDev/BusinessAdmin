@@ -1,14 +1,20 @@
 import { IGym } from '../../gyms/interfaces/gym.interface';
 
-export interface IUser {
+export interface IUser extends UserDataToCreate {
   id: string;
-  cognitoUserId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isActive: boolean;
+  gyms: IGym[];
+}
+
+export interface UserDataToCreate {
+  cognitoId: string;
   firstName: string;
   lastName: string;
   document: string;
   email: string;
   phone: string;
-  createdAt: Date;
-  updatedAt: Date;
-  gyms: IGym[];
 }
+
+export interface UserDataToUpdate extends Partial<UserDataToCreate> {}

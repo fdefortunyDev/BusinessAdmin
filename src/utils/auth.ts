@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { IPermission, IUserAuth } from './interfaces/user.interface';
+import { IPermission, IUserAuth } from './interfaces/user-auth.interface';
 
 export const isRoleAdmin = (user: IUserAuth): boolean => {
   const accesses = getPermissionsAccesses(user);
@@ -8,7 +8,9 @@ export const isRoleAdmin = (user: IUserAuth): boolean => {
   return rolesXPermissions.length > 0;
 };
 
-export const getRolesAndPermissions = (accesses: string[]) => {
+export const getRolesAndPermissions = (
+  accesses: string[],
+): Record<any, any>[] => {
   return accesses.map((access) => {
     const role = access.length > 1 ? access[1] : '';
     return {

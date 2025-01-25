@@ -20,68 +20,70 @@ export class GymsController {
   constructor(private readonly gymsService: GymsService) {}
 
   @ApiOperation({
-    summary: 'register a new gym',
+    summary: 'Create a new gym',
   })
-  // TODO: @Roles(Role.Admin)
   @Post('create')
-  async create(@Body() createGymDto: CreateGymDto) {
+  async create(@Body() createGymDto: CreateGymDto): Promise<IGymResponse> {
     try {
       return this.gymsService.create(createGymDto);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 
   @ApiOperation({
-    summary: 'get all gyms',
+    summary: 'Get all gyms',
   })
-  // TODO: @Roles(Role.Admin)
   @Get('')
   async findAll(): Promise<IGymResponse[]> {
     try {
       return this.gymsService.findAll();
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-    return [];
   }
 
   @ApiOperation({
-    summary: 'get one gym',
+    summary: 'Get one gym',
   })
-  // TODO: @Roles(Role.Admin)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<IGymResponse> {
     try {
       return this.gymsService.findOne(id);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 
   @ApiOperation({
-    summary: 'update a gym',
+    summary: 'Update a gym',
   })
-  // TODO: @Roles(Role.Admin)
   @Patch(':id/update')
-  async update(@Param('id') id: string, @Body() updateGymDto: UpdateGymDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateGymDto: UpdateGymDto,
+  ): Promise<IGymResponse> {
     try {
       return this.gymsService.update(id, updateGymDto);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 
   @ApiOperation({
-    summary: 'disable a gym',
+    summary: 'Disable one gym',
   })
-  // TODO: @Roles(Role.Admin)
   @Delete(':id/disable')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<IGymResponse> {
     try {
       return this.gymsService.remove(id);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 }

@@ -6,6 +6,4 @@ export class IGymResponse {
   phone?: string;
   website?: string;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }

@@ -14,28 +14,28 @@ export class Gym implements IGym {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 150, nullable: false, unique: true })
+  @Column({ type: 'varchar', length: 20, unique: true })
   name: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255 })
   address: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255 })
   email: string;
 
-  @Column({ type: 'varchar', length: 15, nullable: true })
-  phone?: string;
+  @Column({ type: 'varchar', length: 9, nullable: true, default: '' })
+  phone: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  website?: string;
+  @Column({ type: 'varchar', length: 255, nullable: true, default: '' })
+  website: string;
 
   @Column({ type: 'tinyint', default: 1 })
   isActive: boolean;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ name: 'createdAt', type: 'datetime' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn({ name: 'updatedAt', type: 'datetime' })
   updatedAt: Date;
 
   @ManyToOne(() => User, { nullable: false })

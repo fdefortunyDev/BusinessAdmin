@@ -15,7 +15,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const jwtValidate = await super.canActivate(context);
 
     if (!jwtValidate) {

@@ -23,7 +23,7 @@ import { User } from './repository/users/entity/users.entity';
         password: configService.getOrThrow('DB_PASS'),
         database: configService.getOrThrow('DB_NAME'),
         entities: [Gym, User],
-        synchronize: true,
+        synchronize: true, //TODO: en producción cambiar a false
       }),
     }),
     AuthModule,
@@ -35,7 +35,7 @@ import { User } from './repository/users/entity/users.entity';
   providers: [],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer): void {
     consumer.apply(AuthMiddleware).forRoutes('/gyms', '/users');
   }
 }
