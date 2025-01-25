@@ -1,18 +1,35 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
+import { UsersRepositoryService } from '../../repository/users/users.repository.service';
+import { mockAllMethods } from '../../utils/mock-all-methods';
 
 describe('UsersService', () => {
-  let service: UsersService;
+  let usersService: UsersService;
+  let usersRepositoryService: UsersRepositoryService;
+
+  usersRepositoryService = mockAllMethods<UsersRepositoryService>(
+    UsersRepositoryService,
+  );
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService],
-    }).compile();
+    })
+      .useMocker((token) => {
+        if (token === UsersRepositoryService) {
+          return usersRepositoryService;
+        }
+      })
+      .compile();
 
-    service = module.get<UsersService>(UsersService);
+    usersService = module.get<UsersService>(UsersService);
+    usersRepositoryService = module.get<UsersRepositoryService>(
+      UsersRepositoryService,
+    );
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(usersService).toBeDefined();
+    expect(usersRepositoryService).toBeDefined();
   });
 });
