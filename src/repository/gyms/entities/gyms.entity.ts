@@ -14,7 +14,7 @@ export class Gym implements IGym {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 150, nullable: false, unique: true })
+  @Column({ type: 'varchar', length: 20, nullable: false, unique: true })
   name: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
@@ -23,7 +23,7 @@ export class Gym implements IGym {
   @Column({ type: 'varchar', length: 255, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', length: 15, nullable: true })
+  @Column({ type: 'varchar', length: 9, nullable: true })
   phone?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
