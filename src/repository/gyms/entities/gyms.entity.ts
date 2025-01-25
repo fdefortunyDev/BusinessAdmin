@@ -4,13 +4,15 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
-import { Gym } from '../interfaces/gym.interface';
-
+import { IGym } from '../interfaces/gym.interface';
+import { User } from '../../users/entity/users.entity';
 @Entity('gyms')
-export class Gyms implements Gym {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Gym implements IGym {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 150, nullable: false, unique: true })
   name: string;
@@ -35,4 +37,8 @@ export class Gyms implements Gym {
 
   @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
+
+  @ManyToOne(() => User, { nullable: false })
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }

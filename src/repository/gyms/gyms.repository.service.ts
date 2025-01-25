@@ -1,73 +1,63 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Gym, GymDataToCreate } from './interfaces/gym.interface';
-import { GymsError } from '../../utils/errors/gyms-error.enum';
+import { Injectable } from '@nestjs/common';
+import { IGym, GymDataToCreate } from './interfaces/gym.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Gyms } from './entities/gyms.entity';
+import { Gym } from './entities/gyms.entity';
 import { Repository, UpdateResult } from 'typeorm';
+import { User } from '../users/entity/users.entity';
 
 @Injectable()
 export class GymsRepositoryService {
   constructor(
-    @InjectRepository(Gyms)
-    private readonly gymsRepository: Repository<Gyms>,
+    @InjectRepository(Gym)
+    private readonly gymModel: Repository<Gym>,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async create(gymData: GymDataToCreate): Promise<any> {
-    const gymExists = await this.findOneByName(gymData.name);
+    const { name, address, email, phone, website, user } = gymData;
 
-    if (gymExists) {
-      throw new ConflictException(GymsError.alreadyExists);
-    }
+    const gym: Gym = new Gym();
+    gym.name = name;
+    gym.address = address;
+    gym.email = email;
+    gym.phone = phone;
+    gym.website = website;
+    gym.user = user;
 
-    const gymToCreate = this.gymsRepository.create({
-      name: gymData.name,
-      address: gymData.address,
-      email: gymData.email,
-      phone: gymData.phone ?? '',
-      website: gymData.website ?? '',
-      isActive: true,
-    });
-
-    const createdGym = await this.gymsRepository.save(gymToCreate);
-
-    if (!createdGym) {
-      throw new NotFoundException(GymsError.notCreated);
-    }
-
-    return createdGym;
+    return await this.gymModel.save(gym);
   }
 
-  async findAll(): Promise<Gym[]> {
-    const gyms: Gym[] = await this.gymsRepository.find();
+  async findAll(): Promise<IGym[]> {
+    const gyms: IGym[] = await this.gymModel.find({
+      where: { isActive: true },
+    });
     return gyms;
   }
 
-  async findOneByName(name: string) {
-    return await this.gymsRepository.findOne({
-      where: { name, isActive: true },
+  async findOneById(id: string): Promise<IGym | null> {
+    return await this.gymModel.findOne({
+      where: { id, isActive: true },
     });
   }
 
-  async findOneById(id: string): Promise<Gym | null> {
-    return await this.gymsRepository.findOne({
-      where: { id: parseInt(id), isActive: true },
-    });
-  }
-
-  async updateOne(gymToUpdate: Gym): Promise<Gym | null> {
-    return await this.gymsRepository.save(gymToUpdate);
+  async updateOne(gymToUpdate: IGym): Promise<IGym | null> {
+    return await this.gymModel.save(gymToUpdate);
   }
 
   async remove(id: string): Promise<boolean> {
-    const result: UpdateResult = await this.gymsRepository.update(
-      { id: parseInt(id) },
+    const result: UpdateResult = await this.gymModel.update(
+      { id },
       { isActive: false },
     );
 
     return result.affected && result.affected > 0 ? true : false;
+  }
+
+  async findOneByName(name: string) {
+    return await this.gymModel.findOne({
+      where: { name, isActive: true },
+    });
   }
 }

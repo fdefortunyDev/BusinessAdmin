@@ -11,6 +11,7 @@ import { GymsService } from './gyms.service';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CreateGymDto } from './dtos/create-gym.dto';
 import { UpdateGymDto } from './dtos/update-gym.dto';
+import { IGymResponse } from './dtos/gym-response.dto';
 
 @ApiTags('Gyms')
 @ApiSecurity('apikey')
@@ -36,12 +37,13 @@ export class GymsController {
   })
   // TODO: @Roles(Role.Admin)
   @Get('')
-  async findAll() {
+  async findAll(): Promise<IGymResponse[]> {
     try {
       return this.gymsService.findAll();
     } catch (err) {
       console.error(err);
     }
+    return [];
   }
 
   @ApiOperation({

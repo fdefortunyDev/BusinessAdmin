@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   ServiceUnavailableException,
@@ -7,19 +8,41 @@ import { CreateGymDto } from './dtos/create-gym.dto';
 import { GymsRepositoryService } from '../../repository/gyms/gyms.repository.service';
 import { UpdateGymDto } from './dtos/update-gym.dto';
 import { GymsError } from '../../utils/errors/gyms-error.enum';
-import { Gym } from '../../repository/gyms/interfaces/gym.interface';
+import { IGym } from '../../repository/gyms/interfaces/gym.interface';
+import { UsersRepositoryService } from '../../repository/users/users.repository.service';
+import { UsersError } from '../../utils/errors/users-error.enum';
+import { IUser } from '../../repository/users/interfaces/user.interface';
+import { IGymResponse } from './dtos/gym-response.dto';
 
 @Injectable()
 export class GymsService {
-  constructor(private readonly gymRepositoryService: GymsRepositoryService) {}
+  constructor(
+    private readonly gymRepositoryService: GymsRepositoryService,
+    private readonly usersRepositoryService: UsersRepositoryService,
+  ) {}
 
-  async create(createGymDto: CreateGymDto): Promise<Gym> {
-    const createdGym: Gym = await this.gymRepositoryService.create({
-      name: createGymDto.name,
-      address: createGymDto.address,
-      email: createGymDto.email,
-      phone: createGymDto.phone ?? '',
-      website: createGymDto.website ?? '',
+  async create(createGymDto: CreateGymDto): Promise<IGym> {
+    const { name, address, email, phone, website, userId } = createGymDto;
+    const gymExists = await this.gymRepositoryService.findOneByName(name);
+
+    if (gymExists) {
+      throw new ConflictException(GymsError.alreadyExists);
+    }
+
+    const user: IUser | null =
+      await this.usersRepositoryService.findOneById(userId);
+
+    if (!user) {
+      throw new NotFoundException(UsersError.notFound);
+    }
+
+    const createdGym: IGym = await this.gymRepositoryService.create({
+      name,
+      address,
+      email,
+      phone,
+      website,
+      user,
     });
 
     if (!createdGym) {
@@ -29,11 +52,11 @@ export class GymsService {
     return createdGym;
   }
 
-  async findAll(): Promise<Gym[]> {
+  async findAll(): Promise<IGymResponse[]> {
     return await this.gymRepositoryService.findAll();
   }
 
-  async findOne(id: string): Promise<Gym | null> {
+  async findOne(id: string): Promise<IGym | null> {
     const gym = await this.gymRepositoryService.findOneById(id);
 
     if (!gym) {
@@ -44,7 +67,7 @@ export class GymsService {
   }
 
   async update(id: string, updateGymDto: UpdateGymDto) {
-    const gymToUpdate: Gym | null =
+    const gymToUpdate: IGym | null =
       await this.gymRepositoryService.findOneById(id);
 
     if (!gymToUpdate) {
@@ -57,7 +80,7 @@ export class GymsService {
     gymToUpdate.phone = updateGymDto.phone ?? gymToUpdate.phone;
     gymToUpdate.website = updateGymDto.website ?? gymToUpdate.website;
 
-    const updatedGym: Gym | null =
+    const updatedGym: IGym | null =
       await this.gymRepositoryService.updateOne(gymToUpdate);
 
     if (!updatedGym) {
