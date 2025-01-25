@@ -33,22 +33,25 @@ export class CreateGymDto {
   @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '096972933' })
   @MaxLength(9)
   @IsOptional()
   @IsNumberString()
   @Matches(/^(2|3|4|5|6|7|8)[0-9]{7}$|^09[0-9]{7}$/, {
     message: GymsError.invalidPhone,
   })
-  @Transform(({ value }) => (value ? value.trim() : value))
+  @Transform(({ value }) => (value ? value.trim() : ''))
   phone?: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'https://smartgym.com' })
   @MaxLength(255)
   @IsOptional()
   @Matches(/^(http|https):\/\/[a-z0-9\.-]+\.[a-z]{2,4}/i, {
     message: GymsError.invalidWebsite,
   })
-  @Transform(({ value }) => (value ? value.toLowerCase().trim() : value))
+  @Transform(({ value }) => (value ? value.toLowerCase().trim() : ''))
   website?: string;
+
+  @ApiProperty()
+  userId: string;
 }

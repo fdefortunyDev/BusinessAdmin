@@ -5,7 +5,9 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { RepositoryModule } from './repository/repository.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Gyms } from './repository/gyms/entities/gyms.entity';
+import { Gym } from './repository/gyms/entities/gyms.entity';
+import { UsersModule } from './modules/users/users.module';
+import { User } from './repository/users/entity/users.entity';
 
 @Module({
   imports: [
@@ -20,19 +22,20 @@ import { Gyms } from './repository/gyms/entities/gyms.entity';
         username: configService.getOrThrow('DB_USER'),
         password: configService.getOrThrow('DB_PASS'),
         database: configService.getOrThrow('DB_NAME'),
-        entities: [Gyms],
+        entities: [Gym, User],
         synchronize: true,
       }),
     }),
-    GymsModule,
     AuthModule,
     RepositoryModule,
+    GymsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('/gyms');
+    consumer.apply(AuthMiddleware).forRoutes('/gyms', '/users');
   }
 }

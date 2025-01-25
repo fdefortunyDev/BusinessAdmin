@@ -33,7 +33,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     const request = context.switchToHttp().getRequest();
 
-    const { user, headers }: { user; headers: IncomingHttpHeaders } =
+    const { user /*headers*/ }: { user; headers: IncomingHttpHeaders } =
       request || {};
 
     if (!user || !user?.permissions?.length) {

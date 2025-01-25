@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
-import { IPermission, IUser } from './interfaces/user.interface';
+import { IPermission, IUserAuth } from './interfaces/user.interface';
 
-export const isRoleAdmin = (user: IUser): boolean => {
+export const isRoleAdmin = (user: IUserAuth): boolean => {
   const accesses = getPermissionsAccesses(user);
   const rolesXPermissions = getRolesAndPermissions(accesses);
 
@@ -17,7 +17,7 @@ export const getRolesAndPermissions = (accesses: string[]) => {
   });
 };
 
-export const getPermissionsAccesses = (user: IUser): string[] => {
+export const getPermissionsAccesses = (user: IUserAuth): string[] => {
   const config = new ConfigService();
   const accessesPermission =
     user.permissions.find(
