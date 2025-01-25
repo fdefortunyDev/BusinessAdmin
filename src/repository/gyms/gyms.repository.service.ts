@@ -3,16 +3,12 @@ import { IGym, GymDataToCreate } from './interfaces/gym.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gym } from './entities/gyms.entity';
 import { Repository, UpdateResult } from 'typeorm';
-import { User } from '../users/entity/users.entity';
 
 @Injectable()
 export class GymsRepositoryService {
   constructor(
     @InjectRepository(Gym)
     private readonly gymModel: Repository<Gym>,
-
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
 
   async create(gymData: GymDataToCreate): Promise<any> {
