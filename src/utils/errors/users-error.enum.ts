@@ -15,4 +15,8 @@ export enum UsersError {
   documentTooShort = 'users.error.documentTooShort',
 
   notFound = 'users.error.notFound',
+  notUpdated = 'users.error.notUpdated',
+  notCreated = 'users.error.notCreated',
+  notRemoved = 'users.error.notRemoved',
+  alreadyExists = 'users.error.alreadyExists',
 }

@@ -1,20 +1,14 @@
-import { PartialType } from '@nestjs/swagger';
 import { User } from '../../users/entity/users.entity';
 
-export interface IGym extends GymDataToCreate {
+export interface IGym {
   id: string;
+  name: string;
+  address: string;
+  email: string;
+  phone: string;
+  website: string;
+  user: User;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
-
-export class GymDataToCreate {
-  name: string;
-  address: string;
-  email: string;
-  phone?: string;
-  website?: string;
-  user: User;
-}
-
-export class GymDataToUpdate extends PartialType(GymDataToCreate) {}

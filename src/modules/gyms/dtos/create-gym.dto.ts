@@ -44,7 +44,7 @@ export class CreateGymDto {
     message: GymsError.invalidPhone,
   })
   @Transform(({ value }) => (value ? value.trim() : ''))
-  phone?: string;
+  phone: string;
 
   @ApiProperty({ example: 'https://smartgym.com' })
   @IsOptional()
@@ -52,8 +52,8 @@ export class CreateGymDto {
   @Matches(/^(http|https):\/\/[a-z0-9\.-]+\.[a-z]{2,4}/i, {
     message: GymsError.invalidWebsite,
   })
-  @Transform(({ value }) => (value ? value.toLowerCase().trim() : ''))
-  website?: string;
+  @Transform(({ value }) => (value ? value.trim().toLowerCase() : ''))
+  website: string;
 
   @ApiProperty()
   @IsUUID()

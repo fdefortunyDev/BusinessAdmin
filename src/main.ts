@@ -6,7 +6,7 @@ import 'dotenv/config';
 import { ConfigService } from '@nestjs/config';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({

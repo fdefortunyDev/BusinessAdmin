@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IGym, GymDataToCreate } from './interfaces/gym.interface';
+import { IGym } from './interfaces/gym.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gym } from './entities/gyms.entity';
 import { Repository, UpdateResult } from 'typeorm';
+import { GymDataToCreate } from './dtos/in/gym-data-to-creat.dto';
 
 @Injectable()
 export class GymsRepositoryService {
@@ -11,7 +12,7 @@ export class GymsRepositoryService {
     private readonly gymModel: Repository<Gym>,
   ) {}
 
-  async create(gymData: GymDataToCreate): Promise<any> {
+  async create(gymData: GymDataToCreate): Promise<IGym> {
     const { name, address, email, phone, website, user } = gymData;
 
     const gym: Gym = new Gym();
@@ -51,7 +52,7 @@ export class GymsRepositoryService {
     return result.affected && result.affected > 0 ? true : false;
   }
 
-  async findOneByName(name: string) {
+  async findOneByName(name: string): Promise<IGym | null> {
     return await this.gymModel.findOne({
       where: { name, isActive: true },
     });
