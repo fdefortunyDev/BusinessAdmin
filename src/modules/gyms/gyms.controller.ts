@@ -8,10 +8,21 @@ import {
   Post,
 } from '@nestjs/common';
 import { GymsService } from './gyms.service';
-import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiSecurity,
+  ApiServiceUnavailableResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateGymDto } from './dtos/create-gym.dto';
 import { UpdateGymDto } from './dtos/update-gym.dto';
 import { IGymResponse } from './dtos/gym-response.dto';
+import { GymsError } from '../../utils/errors/gyms-error.enum';
+import { UsersError } from '../../utils/errors/users-error.enum';
 
 @ApiTags('Gyms')
 @ApiSecurity('apikey')
@@ -22,6 +33,10 @@ export class GymsController {
   @ApiOperation({
     summary: 'Create a new gym',
   })
+  @ApiConflictResponse({ description: GymsError.alreadyExists })
+  @ApiNotFoundResponse({ description: UsersError.notFound })
+  @ApiServiceUnavailableResponse({ description: GymsError.notCreated })
+  @ApiCreatedResponse({ type: IGymResponse })
   @Post('create')
   async create(@Body() createGymDto: CreateGymDto): Promise<IGymResponse> {
     try {
@@ -35,6 +50,7 @@ export class GymsController {
   @ApiOperation({
     summary: 'Get all gyms',
   })
+  @ApiOkResponse({ type: [IGymResponse] })
   @Get('')
   async findAll(): Promise<IGymResponse[]> {
     try {
@@ -48,6 +64,8 @@ export class GymsController {
   @ApiOperation({
     summary: 'Get one gym',
   })
+  @ApiNotFoundResponse({ description: GymsError.notFound })
+  @ApiOkResponse({ type: IGymResponse })
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<IGymResponse> {
     try {
@@ -61,6 +79,9 @@ export class GymsController {
   @ApiOperation({
     summary: 'Update a gym',
   })
+  @ApiNotFoundResponse({ description: GymsError.notFound })
+  @ApiServiceUnavailableResponse({ description: GymsError.notUpdated })
+  @ApiOkResponse({ type: IGymResponse })
   @Patch(':id/update')
   async update(
     @Param('id') id: string,
@@ -77,6 +98,9 @@ export class GymsController {
   @ApiOperation({
     summary: 'Disable one gym',
   })
+  @ApiNotFoundResponse({ description: GymsError.notFound })
+  @ApiServiceUnavailableResponse({ description: GymsError.notUpdated })
+  @ApiOkResponse({ type: IGymResponse })
   @Delete(':id/disable')
   async remove(@Param('id') id: string): Promise<IGymResponse> {
     try {
