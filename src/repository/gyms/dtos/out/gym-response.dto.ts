@@ -1,4 +1,4 @@
-import { User } from '../../users/entity/users.entity';
+import { IUser } from '../../../users/dtos/out/user-response.dto';
 
 export interface IGym {
   id: string;
@@ -7,7 +7,7 @@ export interface IGym {
   email: string;
   phone: string;
   website: string;
-  user: User;
+  user: IUser;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

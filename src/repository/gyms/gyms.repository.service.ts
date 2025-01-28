@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IGym } from './interfaces/gym.interface';
+import { IGym } from './dtos/out/gym-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gym } from './entities/gyms.entity';
 import { Repository, UpdateResult } from 'typeorm';
-import { GymDataToCreate } from './dtos/in/gym-data-to-creat.dto';
+import { GymDataToCreate } from './dtos/in/gym-data-to-create.dto';
 
 @Injectable()
 export class GymsRepositoryService {

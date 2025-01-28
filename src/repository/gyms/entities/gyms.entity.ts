@@ -7,7 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { IGym } from '../interfaces/gym.interface';
+import { IGym } from '../dtos/out/gym-response.dto';
 import { User } from '../../users/entity/users.entity';
 @Entity('gyms')
 export class Gym implements IGym {
