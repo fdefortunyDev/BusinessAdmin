@@ -8,10 +8,10 @@ import { CreateGymDto } from './dtos/create-gym.dto';
 import { GymsRepositoryService } from '../../repository/gyms/gyms.repository.service';
 import { UpdateGymDto } from './dtos/update-gym.dto';
 import { GymsError } from '../../utils/errors/gyms-error.enum';
-import { IGym } from '../../repository/gyms/interfaces/gym.interface';
+import { IGym } from '../../repository/gyms/dtos/out/gym-response.dto';
 import { UsersRepositoryService } from '../../repository/users/users.repository.service';
 import { UsersError } from '../../utils/errors/users-error.enum';
-import { IUser } from '../../repository/users/interfaces/user.interface';
+import { IUser } from '../../repository/users/dtos/out/user-response.dto';
 import { IGymResponse } from './dtos/gym-response.dto';
 
 @Injectable()
@@ -24,7 +24,8 @@ export class GymsService {
   async create(createGymDto: CreateGymDto): Promise<IGymResponse> {
     const { name, address, email, phone, website, userId } = createGymDto;
 
-    const gymExists = await this.gymRepositoryService.findOneByName(name);
+    const gymExists: IGym | null =
+      await this.gymRepositoryService.findOneByName(name);
 
     if (gymExists) {
       throw new ConflictException(GymsError.alreadyExists);
@@ -50,7 +51,7 @@ export class GymsService {
       throw new ServiceUnavailableException(GymsError.notCreated);
     }
 
-    return {
+    const response: IGymResponse = {
       id: createdGym.id,
       name: createdGym.name,
       address: createdGym.address,
@@ -58,11 +59,27 @@ export class GymsService {
       phone: createdGym.phone,
       website: createdGym.website,
       isActive: createdGym.isActive,
-    } as IGymResponse;
+    };
+
+    return response;
   }
 
   async findAll(): Promise<IGymResponse[]> {
-    return await this.gymRepositoryService.findAll();
+    const gyms: IGym[] = await this.gymRepositoryService.findAll();
+
+    const response: IGymResponse[] = gyms.map((gym) => {
+      return {
+        id: gym.id,
+        name: gym.name,
+        address: gym.address,
+        email: gym.email,
+        phone: gym.phone,
+        website: gym.website,
+        isActive: gym.isActive,
+      };
+    });
+
+    return response;
   }
 
   async findOne(id: string): Promise<IGymResponse> {
@@ -72,7 +89,7 @@ export class GymsService {
       throw new NotFoundException(GymsError.notFound);
     }
 
-    return {
+    const response = {
       id: gym.id,
       name: gym.name,
       address: gym.address,
@@ -80,7 +97,9 @@ export class GymsService {
       phone: gym.phone,
       website: gym.website,
       isActive: gym.isActive,
-    } as IGymResponse;
+    };
+
+    return response;
   }
 
   async update(id: string, updateGymDto: UpdateGymDto): Promise<IGymResponse> {
@@ -104,7 +123,7 @@ export class GymsService {
       throw new ServiceUnavailableException(GymsError.notUpdated);
     }
 
-    return {
+    const response: IGymResponse = {
       id: updatedGym.id,
       name: updatedGym.name,
       address: updatedGym.address,
@@ -113,6 +132,8 @@ export class GymsService {
       website: updatedGym.website,
       isActive: updatedGym.isActive,
     } as IGymResponse;
+
+    return response;
   }
 
   async remove(id: string): Promise<IGymResponse> {
@@ -127,9 +148,16 @@ export class GymsService {
       throw new ServiceUnavailableException(GymsError.notDisabled);
     }
 
-    return {
-      ...gym,
+    const response: IGymResponse = {
+      id: gym.id,
+      name: gym.name,
+      address: gym.address,
+      email: gym.email,
+      phone: gym.phone,
+      website: gym.website,
       isActive: false,
-    } as IGymResponse;
+    };
+
+    return response;
   }
 }

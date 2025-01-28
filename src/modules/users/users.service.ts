@@ -7,11 +7,9 @@ import {
 import { UsersRepositoryService } from '../../repository/users/users.repository.service';
 import { IUserResponse } from './dtos/user.response';
 import { CreateUserDto } from './dtos/create-user.dto';
-import {
-  IUser,
-  UserDataToUpdate,
-} from '../../repository/users/interfaces/user.interface';
+import { IUser } from '../../repository/users/dtos/out/user-response.dto';
 import { UsersError } from '../../utils/errors/users-error.enum';
+import { UserDataToUpdate } from '../../repository/users/dtos/in/user-data.to-update.dto';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +20,7 @@ export class UsersService {
     const { cognitoId, firstName, lastName, document, email, phone } =
       createUserDto;
 
-    const userExists =
+    const userExists: IUser | null =
       await this.usersRepositoryService.checkIfUserAlreadyExists(email, phone);
 
     if (userExists) {
@@ -42,7 +40,7 @@ export class UsersService {
       throw new ServiceUnavailableException(UsersError.notCreated);
     }
 
-    return {
+    const response: IUserResponse = {
       id: createdUser.id,
       firstName: createdUser.firstName,
       lastName: createdUser.lastName,
@@ -50,11 +48,24 @@ export class UsersService {
       email: createdUser.email,
       phone: createdUser.phone,
       isActive: createdUser.isActive,
-    } as IUserResponse;
+    };
+
+    return response;
   }
 
   async findAll(): Promise<IUserResponse[]> {
-    return this.usersRepositoryService.findAll();
+    const users: IUser[] = await this.usersRepositoryService.findAll();
+    return users.map((user) => {
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        document: user.document,
+        email: user.email,
+        phone: user.phone,
+        isActive: user.isActive,
+      } as IUserResponse;
+    });
   }
 
   async findOne(id: string): Promise<IUserResponse> {
@@ -65,7 +76,7 @@ export class UsersService {
       throw new NotFoundException(UsersError.notFound);
     }
 
-    return {
+    const response: IUserResponse = {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -73,7 +84,9 @@ export class UsersService {
       email: user.email,
       phone: user.phone,
       isActive: user.isActive,
-    } as IUserResponse;
+    };
+
+    return response;
   }
 
   async update(
@@ -104,7 +117,7 @@ export class UsersService {
       throw new ServiceUnavailableException(UsersError.notUpdated);
     }
 
-    return {
+    const response: IUserResponse = {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -112,7 +125,9 @@ export class UsersService {
       email: user.email,
       phone: user.phone,
       isActive: user.isActive,
-    } as IUserResponse;
+    };
+
+    return response;
   }
 
   async remove(id: string): Promise<IUserResponse> {
@@ -128,9 +143,11 @@ export class UsersService {
       throw new ServiceUnavailableException(UsersError.notRemoved);
     }
 
-    return {
+    const response: IUserResponse = {
       ...user,
       isActive: false,
-    } as IUserResponse;
+    };
+
+    return response;
   }
 }

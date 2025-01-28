@@ -1,4 +1,4 @@
-import { IUser } from '../../../users/interfaces/user.interface';
+import { IUser } from '../../../users/dtos/out/user-response.dto';
 
 export class GymDataToCreate {
   name: string;
