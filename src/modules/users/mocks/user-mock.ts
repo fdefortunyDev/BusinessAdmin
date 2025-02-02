@@ -12,6 +12,6 @@ export function getUserMock(): IUser {
     createdAt: new Date(),
     updatedAt: new Date(),
     isActive: true,
-    gyms: [],
+    business: [],
   };
 }
