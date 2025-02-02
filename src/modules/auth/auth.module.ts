@@ -2,19 +2,13 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { ApiKeyStrategy } from './apikey.strategy';
 import { AuthService } from './auth.service';
-import { JwtService } from '@nestjs/jwt';
-import { JwtAuthGuard } from './jwt-auth';
-import { ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './jwt.strategy';
+import { HttpModule } from '@nestjs/axios';
+import { AuthController } from './auth.controller';
 
 @Module({
-  imports: [PassportModule],
-  providers: [
-    ApiKeyStrategy,
-    AuthService,
-    JwtService,
-    JwtAuthGuard,
-    ConfigService,
-  ],
-  exports: [AuthService, JwtAuthGuard],
+  imports: [PassportModule, HttpModule],
+  controllers: [AuthController],
+  providers: [ApiKeyStrategy, JwtStrategy, AuthService],
 })
 export class AuthModule {}

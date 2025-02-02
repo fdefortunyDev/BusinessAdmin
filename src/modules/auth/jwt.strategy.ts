@@ -9,7 +9,14 @@ import { IUserAuth } from '../../utils/interfaces/user-auth.interface';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: (req) => {
+        if (!req) return null;
+        if (req.cookies && req.cookies.access_token) {
+          return req.cookies.access_token;
+        }
+
+        return ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+      },
       ignoreExpiration: false,
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -21,15 +28,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload): Promise<IUserAuth> {
-    const user = JSON.parse(payload.user);
-    const { permissions } = JSON.parse(payload.permissions);
+    //TODO: modificar interface
     const requestUser = {
       id: payload.sub,
-      email: user.email,
-      name: user.name,
-      lastName: user.lastName,
-      permissions,
+      email: payload.email,
+      name: payload.name,
+      lastName: payload.lastName,
+      permissions: payload.permissions,
     };
+    console.log({ payload });
+
+    console.log({ requestUser });
     return requestUser;
   }
 }

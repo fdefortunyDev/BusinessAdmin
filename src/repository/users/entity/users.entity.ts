@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Gym } from '../../gyms/entities/gyms.entity';
+import { Business } from '../../business/entities/business.entity';
 
 @Entity('users')
 export class User {
@@ -45,6 +45,6 @@ export class User {
   @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 
-  @OneToMany(() => Gym, (gym) => gym.user, { lazy: true })
-  gyms: Gym[];
+  @OneToMany(() => Business, (business) => business.user, { lazy: true })
+  business: Business[];
 }

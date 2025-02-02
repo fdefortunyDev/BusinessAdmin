@@ -5,9 +5,11 @@ import { ValidationPipe } from '@nestjs/common';
 import 'dotenv/config';
 import { ConfigService } from '@nestjs/config';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -15,12 +17,17 @@ async function bootstrap(): Promise<void> {
   );
 
   app.enableCors({
-    origin: '*',
+    origin: 'http://localhost:8080/', // Reemplázalo por la url del frontend correcto
+    credentials: true, // Habilita el envío de cookies
   });
 
+  const configService = new ConfigService();
+
+  app.use(cookieParser()); // Necesario para sesiones
+
   const config = new DocumentBuilder()
-    .setTitle('Gym Admin')
-    .setDescription('API for Gym Administration')
+    .setTitle('Business Admin')
+    .setDescription('API for Business Administration')
     .setVersion('0.0.1')
     .setContact(
       'Federico de Fortuny',
@@ -28,7 +35,6 @@ async function bootstrap(): Promise<void> {
       'fdefortuny@gmail.com',
     )
     .addApiKey({ type: 'apiKey', in: 'header', name: 'apikey' }, 'apikey')
-    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
@@ -36,7 +42,6 @@ async function bootstrap(): Promise<void> {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
-  const configService = new ConfigService();
   await app.listen(configService.get('APP_PORT') || 4000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { GymsRepositoryService } from './gyms/gyms.repository.service';
+import { BusinessRepositoryService } from './business/business.repository.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Gym } from './gyms/entities/gyms.entity';
+import { Business } from './business/entities/business.entity';
 import { UsersRepositoryService } from './users/users.repository.service';
 import { User } from './users/entity/users.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Gym, User])],
-  providers: [GymsRepositoryService, UsersRepositoryService],
-  exports: [GymsRepositoryService, UsersRepositoryService],
+  imports: [TypeOrmModule.forFeature([Business, User])],
+  providers: [BusinessRepositoryService, UsersRepositoryService],
+  exports: [BusinessRepositoryService, UsersRepositoryService],
 })
 export class RepositoryModule {}

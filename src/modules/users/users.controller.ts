@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -14,7 +15,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiSecurity,
   ApiServiceUnavailableResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -22,9 +22,12 @@ import { IUserResponse } from './dtos/user.response';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersError } from '../../utils/errors/users-error.enum';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../../utils/role.enum';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @ApiTags('Users')
-@ApiSecurity('apikey')
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -36,7 +39,6 @@ export class UsersController {
   @Post('/create')
   async create(@Body() createUserDto: CreateUserDto): Promise<IUserResponse> {
     try {
-      console.log('createUserDto', createUserDto);
       return await this.usersService.create(createUserDto);
     } catch (error) {
       console.error(error);
@@ -46,6 +48,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ type: [IUserResponse] })
+  @Roles(Role.Admin)
   @Get('/')
   async findAll(): Promise<IUserResponse[]> {
     try {

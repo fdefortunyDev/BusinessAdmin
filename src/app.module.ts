@@ -1,13 +1,15 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GymsModule } from './modules/gyms/gyms.module';
+import { BusinessModule } from './modules/business/business.module';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { RepositoryModule } from './repository/repository.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Gym } from './repository/gyms/entities/gyms.entity';
+import { Business } from './repository/business/entities/business.entity';
 import { UsersModule } from './modules/users/users.module';
 import { User } from './repository/users/entity/users.entity';
+import { CognitoController } from './aws/cognito/cognito.controller';
+import { CognitoService } from './aws/cognito/cognito.service';
 
 @Module({
   imports: [
@@ -22,20 +24,20 @@ import { User } from './repository/users/entity/users.entity';
         username: configService.getOrThrow('DB_USER'),
         password: configService.getOrThrow('DB_PASS'),
         database: configService.getOrThrow('DB_NAME'),
-        entities: [Gym, User],
+        entities: [Business, User],
         synchronize: true, //TODO: en producción cambiar a false
       }),
     }),
     AuthModule,
     RepositoryModule,
-    GymsModule,
+    BusinessModule,
     UsersModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [CognitoController],
+  providers: [CognitoService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(AuthMiddleware).forRoutes('/gyms', '/users');
+    consumer.apply(AuthMiddleware).forRoutes('/cognito');
   }
 }

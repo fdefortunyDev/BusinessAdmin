@@ -1,4 +1,4 @@
-import { IGym } from '../../../gyms/dtos/out/gym-response.dto';
+import { IBusiness } from '../../../business/dtos/out/business-response.dto';
 import { UserDataToCreate } from '../in/user-data-to-create.dto';
 
 export interface IUser extends UserDataToCreate {
@@ -6,5 +6,5 @@ export interface IUser extends UserDataToCreate {
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean;
-  gyms: IGym[];
+  business: IBusiness[];
 }

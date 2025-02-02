@@ -1,3 +1,1 @@
-export enum GeneralError {
-  invalidApikey = 'general.error.invalidApikey',
-}
+export enum GeneralError {}
