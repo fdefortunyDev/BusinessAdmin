@@ -145,7 +145,7 @@ export class BusinessService {
     return response;
   }
 
-  async remove(id: string): Promise<IBusinessResponse> {
+  async disable(id: string): Promise<IBusinessResponse> {
     const business: IBusiness | null =
       await this.businessRepositoryService.findOneById(id);
     if (!business) {

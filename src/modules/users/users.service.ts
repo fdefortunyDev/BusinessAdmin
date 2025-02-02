@@ -130,7 +130,7 @@ export class UsersService {
     return response;
   }
 
-  async remove(id: string): Promise<IUserResponse> {
+  async disable(id: string): Promise<IUserResponse> {
     const user: IUser | null =
       await this.usersRepositoryService.findOneById(id);
 

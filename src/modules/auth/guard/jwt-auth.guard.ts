@@ -22,8 +22,8 @@ export class JwtAuthGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    if (!requiredRoles) {
-      return true;
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return false;
     }
 
     const request = context.switchToHttp().getRequest();
@@ -37,9 +37,11 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const decodedAccessToken = await this.verifyToken(accessToken);
       const decodedIdToken = jwt.decode(idToken);
+
       if (!decodedIdToken) {
         throw new UnauthorizedException('Invalid decoded token');
       }
+
       request.user = decodedAccessToken;
       const userPermissions: string[] =
         getPermissionsFromIdToken(decodedIdToken);
@@ -47,6 +49,7 @@ export class JwtAuthGuard implements CanActivate {
       const isSuperAdmin = userPermissions.some(
         (role) => role === Role.SuperAdmin,
       );
+
       if (isSuperAdmin) {
         return true;
       }
@@ -60,11 +63,12 @@ export class JwtAuthGuard implements CanActivate {
 
   private async verifyToken(token: string): Promise<any> {
     const decodedToken = jwt.decode(token, { complete: true });
+
     if (!decodedToken) {
       throw new UnauthorizedException('Invalid decoded token');
     }
-    const kid = decodedToken.header.kid;
 
+    const kid = decodedToken.header.kid;
     const key = await this.client.getSigningKey(kid);
     const signingKey = key.getPublicKey();
 

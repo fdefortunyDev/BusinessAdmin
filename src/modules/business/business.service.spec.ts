@@ -271,7 +271,7 @@ describe('BusinessService', () => {
           .mockResolvedValue(businessMock);
         jest.spyOn(businessRepositoryService, 'remove').mockResolvedValue(true);
 
-        expect(businessService.remove(businessMock.id)).resolves.toEqual({
+        expect(businessService.disable(businessMock.id)).resolves.toEqual({
           ...businessResponseMock,
           isActive: false,
         });
@@ -283,7 +283,7 @@ describe('BusinessService', () => {
           .spyOn(businessRepositoryService, 'findOneById')
           .mockResolvedValue(null);
 
-        expect(businessService.remove(businessMock.id)).rejects.toThrow(
+        expect(businessService.disable(businessMock.id)).rejects.toThrow(
           new NotFoundException(BusinessError.notFound),
         );
       });
@@ -296,7 +296,7 @@ describe('BusinessService', () => {
           .spyOn(businessRepositoryService, 'remove')
           .mockResolvedValue(false);
 
-        expect(businessService.remove(businessMock.id)).rejects.toThrow(
+        expect(businessService.disable(businessMock.id)).rejects.toThrow(
           new ServiceUnavailableException(BusinessError.notDisabled),
         );
       });
