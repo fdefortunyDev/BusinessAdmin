@@ -53,15 +53,19 @@ export class JwtAuthGuard implements CanActivate {
       }
     }
 
-    let decodedIdToken;
     try {
       const decodedAccessToken = await this.verifyToken(accessToken);
       request.user = decodedAccessToken;
-      decodedIdToken = jwt.decode(idToken);
     } catch (err) {
       if (err.name === 'TokenExpiredError' && refreshToken) {
         try {
-          await this.generateNewTokens(request, response, refreshToken);
+          const tokens = await this.generateNewTokens(
+            request,
+            response,
+            refreshToken,
+          );
+          accessToken = tokens.access_token;
+          idToken = tokens.id_token;
         } catch (error) {
           console.error(error);
           return false;
@@ -70,6 +74,8 @@ export class JwtAuthGuard implements CanActivate {
         throw new UnauthorizedException('Invalid token');
       }
     }
+
+    const decodedIdToken = jwt.decode(idToken);
 
     if (!decodedIdToken) {
       throw new UnauthorizedException('Invalid decoded id_token');
