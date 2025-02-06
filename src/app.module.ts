@@ -25,7 +25,7 @@ import { CognitoService } from './aws/cognito/cognito.service';
         password: configService.getOrThrow('DB_PASS'),
         database: configService.getOrThrow('DB_NAME'),
         entities: [Business, User],
-        synchronize: true, //TODO: en producción cambiar a false
+        synchronize: configService.getOrThrow('NODE_ENV') !== 'production',
       }),
     }),
     AuthModule,

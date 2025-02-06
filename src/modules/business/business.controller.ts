@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -22,8 +23,12 @@ import { IBusinessResponse } from './dtos/business-response.dto';
 import { BusinessError } from '../../utils/errors/business-error.enum';
 import { UsersError } from '../../utils/errors/users-error.enum';
 import { BusinessService } from './business.service';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../../utils/role.enum';
 
 @ApiTags('Business')
+@UseGuards(JwtAuthGuard)
 @Controller('business')
 export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}
@@ -35,6 +40,7 @@ export class BusinessController {
   @ApiNotFoundResponse({ description: UsersError.notFound })
   @ApiServiceUnavailableResponse({ description: BusinessError.notCreated })
   @ApiCreatedResponse({ type: IBusinessResponse })
+  @Roles(Role.SuperAdmin)
   @Post('create')
   async create(
     @Body() createBusinessDto: CreateBusinessDto,
@@ -51,6 +57,7 @@ export class BusinessController {
     summary: 'Get all business',
   })
   @ApiOkResponse({ type: [IBusinessResponse] })
+  @Roles(Role.SuperAdmin)
   @Get('')
   async findAll(): Promise<IBusinessResponse[]> {
     try {
@@ -66,6 +73,7 @@ export class BusinessController {
   })
   @ApiNotFoundResponse({ description: BusinessError.notFound })
   @ApiOkResponse({ type: IBusinessResponse })
+  @Roles(Role.BusinessOwner)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<IBusinessResponse> {
     try {
@@ -82,6 +90,7 @@ export class BusinessController {
   @ApiNotFoundResponse({ description: BusinessError.notFound })
   @ApiServiceUnavailableResponse({ description: BusinessError.notUpdated })
   @ApiOkResponse({ type: IBusinessResponse })
+  @Roles(Role.BusinessOwner)
   @Patch(':id/update')
   async update(
     @Param('id') id: string,
@@ -102,9 +111,9 @@ export class BusinessController {
   @ApiServiceUnavailableResponse({ description: BusinessError.notUpdated })
   @ApiOkResponse({ type: IBusinessResponse })
   @Delete(':id/disable')
-  async remove(@Param('id') id: string): Promise<IBusinessResponse> {
+  async disable(@Param('id') id: string): Promise<IBusinessResponse> {
     try {
-      return this.businessService.remove(id);
+      return this.businessService.disable(id);
     } catch (error) {
       console.error(error);
       throw error;

@@ -33,23 +33,16 @@ export class AuthController {
     try {
       const { access_token, id_token, refresh_token } =
         await this.authService.callback(code);
-      res.cookie('access_token', access_token, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: 'strict',
-      });
-      res.cookie('id_token', id_token, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: 'strict',
-      });
-      res.cookie('refresh_token', refresh_token, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-      });
-      return this.redirectToApp(res);
+
+      const response = this.setCookies(
+        res,
+        access_token,
+        id_token,
+        refresh_token,
+        isProduction,
+      );
+
+      return this.redirectToApp(response);
     } catch (error) {
       console.error(
         AuthError.tokenExchangeFailed,
@@ -57,6 +50,41 @@ export class AuthController {
       );
       throw new InternalServerErrorException(AuthError.tokenExchangeFailed);
     }
+  }
+
+  private setCookies(
+    res: Response,
+    access_token: any,
+    id_token: any,
+    refresh_token: any,
+    isProduction: boolean,
+  ): Response {
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      maxAge: parseInt(
+        this.configService.getOrThrow('ACCESS_TOKEN_EXPIRATION'),
+      ),
+    });
+
+    res.cookie('id_token', id_token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      maxAge: parseInt(this.configService.getOrThrow('ID_TOKEN_EXPIRATION')),
+    });
+
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      maxAge: parseInt(
+        this.configService.getOrThrow('REFRESH_TOKEN_EXPIRATION'),
+      ),
+    });
+
+    return res;
   }
 
   private redirectToApp(res: Response): void {

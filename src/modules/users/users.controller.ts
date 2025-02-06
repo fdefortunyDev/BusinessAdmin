@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -25,6 +26,7 @@ import { UsersError } from '../../utils/errors/users-error.enum';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../../utils/role.enum';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { Request } from 'express';
 
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard)
@@ -36,6 +38,7 @@ export class UsersController {
   @ApiCreatedResponse({ type: IUserResponse })
   @ApiConflictResponse({ description: UsersError.alreadyExists })
   @ApiServiceUnavailableResponse({ description: UsersError.notCreated })
+  @Roles(Role.SuperAdmin)
   @Post('/create')
   async create(@Body() createUserDto: CreateUserDto): Promise<IUserResponse> {
     try {
@@ -48,7 +51,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ type: [IUserResponse] })
-  @Roles(Role.Admin)
+  @Roles(Role.SuperAdmin)
   @Get('/')
   async findAll(): Promise<IUserResponse[]> {
     try {
@@ -62,10 +65,15 @@ export class UsersController {
   @ApiOperation({ summary: 'Get one user' })
   @ApiOkResponse({ type: IUserResponse })
   @ApiNotFoundResponse({ description: UsersError.notFound })
+  @Roles(Role.BusinessOwner, Role.BusinessUser)
   @Get('/:id')
-  async findOne(@Param() id: string): Promise<IUserResponse> {
+  async findOne(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<IUserResponse> {
     try {
-      return await this.usersService.findOne(id);
+      const user = req.user;
+      return await this.usersService.findOne(id, user);
     } catch (error) {
       console.error(error);
       throw error;
@@ -76,9 +84,10 @@ export class UsersController {
   @ApiOkResponse({ type: IUserResponse })
   @ApiNotFoundResponse({ description: UsersError.notFound })
   @ApiServiceUnavailableResponse({ description: UsersError.notUpdated })
+  @Roles(Role.BusinessOwner, Role.BusinessUser)
   @Patch('/:id/update')
   async update(
-    @Param() id: string,
+    @Param('id') id: string,
     @Body() userDataToUpdate: UpdateUserDto,
   ): Promise<IUserResponse> {
     try {
@@ -93,10 +102,11 @@ export class UsersController {
   @ApiOkResponse({ type: IUserResponse })
   @ApiNotFoundResponse({ description: UsersError.notFound })
   @ApiServiceUnavailableResponse({ description: UsersError.notRemoved })
-  @Delete('/:id/remove')
-  async remove(@Param('id') id: string): Promise<IUserResponse> {
+  @Roles(Role.SuperAdmin)
+  @Delete('/:id/disable')
+  async disable(@Param('id') id: string): Promise<IUserResponse> {
     try {
-      return await this.usersService.remove(id);
+      return await this.usersService.disable(id);
     } catch (error) {
       console.error(error);
       throw error;

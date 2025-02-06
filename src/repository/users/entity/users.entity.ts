@@ -14,7 +14,6 @@ export class User {
   id: string;
 
   @Column({
-    name: 'cognitoId',
     type: 'varchar',
     length: 255,
     unique: true,
