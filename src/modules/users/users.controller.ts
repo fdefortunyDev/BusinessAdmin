@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -25,6 +26,7 @@ import { UsersError } from '../../utils/errors/users-error.enum';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../../utils/role.enum';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { Request } from 'express';
 
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard)
@@ -65,9 +67,13 @@ export class UsersController {
   @ApiNotFoundResponse({ description: UsersError.notFound })
   @Roles(Role.BusinessOwner, Role.BusinessUser)
   @Get('/:id')
-  async findOne(@Param('id') id: string): Promise<IUserResponse> {
+  async findOne(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<IUserResponse> {
     try {
-      return await this.usersService.findOne(id);
+      const user = req.user;
+      return await this.usersService.findOne(id, user);
     } catch (error) {
       console.error(error);
       throw error;
@@ -78,7 +84,7 @@ export class UsersController {
   @ApiOkResponse({ type: IUserResponse })
   @ApiNotFoundResponse({ description: UsersError.notFound })
   @ApiServiceUnavailableResponse({ description: UsersError.notUpdated })
-  @Roles(Role.SuperAdmin)
+  @Roles(Role.BusinessOwner, Role.BusinessUser)
   @Patch('/:id/update')
   async update(
     @Param('id') id: string,

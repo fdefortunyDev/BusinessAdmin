@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   ServiceUnavailableException,
@@ -68,13 +69,18 @@ export class UsersService {
     });
   }
 
-  async findOne(id: string): Promise<IUserResponse> {
+  async findOne(id: string, requestUser: any): Promise<IUserResponse> {
     const user: IUser | null =
       await this.usersRepositoryService.findOneById(id);
 
     if (!user) {
       throw new NotFoundException(UsersError.notFound);
     }
+
+    if (user.cognitoId !== requestUser.sub) {
+      throw new ForbiddenException();
+    }
+    console.log(requestUser);
 
     const response: IUserResponse = {
       id: user.id,

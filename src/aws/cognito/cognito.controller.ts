@@ -21,6 +21,8 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import { SignInDto } from './dtos/in/sign-in.dto';
 import { SignUpDto } from './dtos/in/sign-up.dto';
+import { Roles } from '../../modules/auth/roles.decorator';
+import { Role } from '../../utils/role.enum';
 
 @ApiTags('cognito')
 @ApiSecurity('apikey')
@@ -57,6 +59,7 @@ export class CognitoController {
   @ApiOkResponse({ description: 'User signed out successfully' })
   @ApiOperation({ summary: 'Sign out a user' })
   @Post('sign-out')
+  @Roles(Role.SuperAdmin)
   async signOut(@Res() res: Response): Promise<Response> {
     try {
       res.clearCookie('access_token');
@@ -71,6 +74,7 @@ export class CognitoController {
 
   @ApiOkResponse({ description: 'User signed up successfully' })
   @ApiOperation({ summary: 'Sign up a user' })
+  @Roles(Role.SuperAdmin)
   @Post('sign-up')
   async signUp(@Body() body: SignUpDto): Promise<SignUpCommandOutput> {
     try {
@@ -85,6 +89,7 @@ export class CognitoController {
   @ApiOkResponse({ description: 'User confirmed signup successfully' })
   @ApiOperation({ summary: 'Confirm signup' })
   @Post('confirm-sign-up')
+  @Roles(Role.SuperAdmin)
   async confirmSignUp(
     @Body() body: ConfirmSignUpDto,
   ): Promise<ConfirmSignUpCommandOutput> {

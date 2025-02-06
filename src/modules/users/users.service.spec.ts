@@ -5,7 +5,12 @@ import { mockAllMethods } from '../../utils/mock-all-methods';
 import { IUser } from '../../repository/users/dtos/out/user-response.dto';
 import { getUserMock } from './mocks/user-mock';
 import { IUserResponse } from './dtos/user.response';
-import { ConflictException, ServiceUnavailableException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { UsersError } from '../../utils/errors/users-error.enum';
 
 describe('UsersService', () => {
@@ -143,7 +148,9 @@ describe('UsersService', () => {
           .spyOn(usersRepositoryService, 'findOneById')
           .mockResolvedValue(userMock);
 
-        const response = await usersService.findOne(userMock.id);
+        const response = await usersService.findOne(userMock.id, {
+          sub: userMock.cognitoId,
+        });
 
         expect(response).toEqual(userResponseMock);
       });
@@ -155,9 +162,19 @@ describe('UsersService', () => {
           .spyOn(usersRepositoryService, 'findOneById')
           .mockResolvedValue(null);
 
-        await expect(usersService.findOne(userMock.id)).rejects.toThrow(
-          new ConflictException(UsersError.notFound),
-        );
+        await expect(
+          usersService.findOne(userMock.id, { sub: userMock.cognitoId }),
+        ).rejects.toThrow(new NotFoundException(UsersError.notFound));
+      });
+
+      it('should throw a forbidden exception when the user requesting userData is not the one', async () => {
+        jest
+          .spyOn(usersRepositoryService, 'findOneById')
+          .mockResolvedValue(null);
+
+        await expect(
+          usersService.findOne(userMock.id, { sub: 'fakeId' }),
+        ).rejects.toThrow(new ForbiddenException(UsersError.notFound));
       });
     });
   });
