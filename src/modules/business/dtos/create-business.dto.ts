@@ -8,7 +8,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { BusinessError } from '../../../utils/errors/business-error.enum';
+import { BusinessError } from '../../../utils/enums/errors/business-error.enum';
 
 export class CreateBusinessDto {
   @ApiProperty({ example: 'SmartGym' })

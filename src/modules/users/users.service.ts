@@ -9,7 +9,7 @@ import { UsersRepositoryService } from '../../repository/users/users.repository.
 import { IUserResponse } from './dtos/user.response';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { IUser } from '../../repository/users/dtos/out/user-response.dto';
-import { UsersError } from '../../utils/errors/users-error.enum';
+import { UsersError } from '../../utils/enums/errors/users-error.enum';
 import { UserDataToUpdate } from '../../repository/users/dtos/in/user-data.to-update.dto';
 
 @Injectable()
@@ -18,24 +18,24 @@ export class UsersService {
     private readonly usersRepositoryService: UsersRepositoryService,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<IUserResponse> {
-    const { cognitoId, firstName, lastName, document, email, phone } =
-      createUserDto;
+    const { cognitoId, document, email, phone } = createUserDto;
 
     const userExists: IUser | null =
-      await this.usersRepositoryService.checkIfUserAlreadyExists(email, phone);
+      await this.usersRepositoryService.checkIfUserAlreadyExists(
+        document,
+        email,
+        phone,
+        cognitoId,
+      );
 
     if (userExists) {
       throw new ConflictException(UsersError.alreadyExists);
     }
 
-    const createdUser: IUser | null = await this.usersRepositoryService.create({
-      cognitoId,
-      firstName,
-      lastName,
-      document,
-      email,
-      phone,
-    });
+    console.log(cognitoId);
+
+    const createdUser: IUser | null =
+      await this.usersRepositoryService.create(createUserDto);
 
     if (!createdUser) {
       throw new ServiceUnavailableException(UsersError.notCreated);

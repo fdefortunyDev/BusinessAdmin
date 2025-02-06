@@ -22,9 +22,9 @@ import {
 import { IUserResponse } from './dtos/user.response';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { UsersError } from '../../utils/errors/users-error.enum';
+import { UsersError } from '../../utils/enums/errors/users-error.enum';
 import { Roles } from '../auth/roles.decorator';
-import { Role } from '../../utils/role.enum';
+import { Role } from '../../utils/enums/role.enum';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { Request } from 'express';
 

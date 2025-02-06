@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { AuthError } from '../../utils/errors/auth-error.enum';
+import { AuthError } from '../../utils/enums/errors/auth-error.enum';
 
 @ApiTags('auth')
 @Controller('auth')

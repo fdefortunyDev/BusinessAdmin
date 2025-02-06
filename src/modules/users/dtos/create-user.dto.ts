@@ -7,10 +7,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { UsersError } from '../../../utils/errors/users-error.enum';
+import { UsersError } from '../../../utils/enums/errors/users-error.enum';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'abc123-abc123-abc123-abc123' })
+  @ApiProperty({ example: '' })
   @MaxLength(255, { message: UsersError.invalidCognitoId })
   @Transform(({ value }) => value.trim())
   cognitoId: string;
@@ -34,7 +34,7 @@ export class CreateUserDto {
   })
   lastName: string;
 
-  @ApiProperty({ example: '12345678' })
+  @ApiProperty({ example: '12223334' })
   @MaxLength(8, { message: UsersError.documentTooLong })
   @MinLength(7, { message: UsersError.documentTooShort })
   @IsNumberString()

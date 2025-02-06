@@ -11,7 +11,7 @@ import {
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import { UsersError } from '../../utils/errors/users-error.enum';
+import { UsersError } from '../../utils/enums/errors/users-error.enum';
 
 describe('UsersService', () => {
   const userMock: IUser = getUserMock();

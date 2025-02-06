@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import * as jwt from 'jsonwebtoken';
 import * as jwksClient from 'jwks-rsa';
-import { Role } from '../../../utils/role.enum';
+import { Role } from '../../../utils/enums/role.enum';
 import { HttpService } from '@nestjs/axios';
 import axios from 'axios';
 import { Request, Response } from 'express';
@@ -163,5 +163,5 @@ export class JwtAuthGuard implements CanActivate {
 function getPermissionsFromIdToken(
   decodedIdToken: string | jwt.JwtPayload,
 ): string[] {
-  return decodedIdToken['custom:permissions'].split(',') || [];
+  return decodedIdToken['custom:permissions']?.split(',') || [];
 }
