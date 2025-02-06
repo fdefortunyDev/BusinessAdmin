@@ -11,8 +11,8 @@ import {
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import { BusinessError } from '../../utils/errors/business-error.enum';
-import { UsersError } from '../../utils/errors/users-error.enum';
+import { BusinessError } from '../../utils/enums/errors/business-error.enum';
+import { UsersError } from '../../utils/enums/errors/users-error.enum';
 
 describe('BusinessService', () => {
   const businessMock = getBusinessMock();

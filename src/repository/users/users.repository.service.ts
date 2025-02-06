@@ -49,11 +49,13 @@ export class UsersRepositoryService {
   }
 
   async checkIfUserAlreadyExists(
+    document: string,
     email: string,
     phone: string,
+    cognitoId: string,
   ): Promise<IUser | null> {
     const user: User | null = await this.usersModel.findOne({
-      where: { email, phone },
+      where: [{ document }, { email }, { phone }, { cognitoId }],
     });
 
     return user;

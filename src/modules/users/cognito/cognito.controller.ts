@@ -21,8 +21,8 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import { SignInDto } from './dtos/in/sign-in.dto';
 import { SignUpDto } from './dtos/in/sign-up.dto';
-import { Roles } from '../../modules/auth/roles.decorator';
-import { Role } from '../../utils/role.enum';
+import { Roles } from '../../auth/roles.decorator';
+import { Role } from '../../../utils/enums/role.enum';
 
 @ApiTags('cognito')
 @ApiSecurity('apikey')

@@ -24,7 +24,7 @@ import {
   ChangePasswordCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigService } from '@nestjs/config';
-import { CognitoClient } from '../../utils/aws/cognito';
+import { CognitoClient } from '../../../utils';
 import * as crypto from 'crypto';
 import { SignUpDto } from './dtos/in/sign-up.dto';
 import { ConfirmSignUpDto } from './dtos/in/confirm-sign-up.dto';

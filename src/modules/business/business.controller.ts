@@ -20,12 +20,12 @@ import {
 import { CreateBusinessDto } from './dtos/create-business.dto';
 import { UpdateBusinessDto } from './dtos/update-business.dto';
 import { IBusinessResponse } from './dtos/business-response.dto';
-import { BusinessError } from '../../utils/errors/business-error.enum';
-import { UsersError } from '../../utils/errors/users-error.enum';
+import { BusinessError } from '../../utils/enums/errors/business-error.enum';
+import { UsersError } from '../../utils/enums/errors/users-error.enum';
 import { BusinessService } from './business.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
-import { Role } from '../../utils/role.enum';
+import { Role } from '../../utils/enums/role.enum';
 
 @ApiTags('Business')
 @UseGuards(JwtAuthGuard)

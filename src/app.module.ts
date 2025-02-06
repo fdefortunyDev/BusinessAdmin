@@ -8,8 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Business } from './repository/business/entities/business.entity';
 import { UsersModule } from './modules/users/users.module';
 import { User } from './repository/users/entity/users.entity';
-import { CognitoController } from './aws/cognito/cognito.controller';
-import { CognitoService } from './aws/cognito/cognito.service';
+import { CognitoController } from './modules/users/cognito/cognito.controller';
+import { CognitoService } from './modules/users/cognito/cognito.service';
 
 @Module({
   imports: [

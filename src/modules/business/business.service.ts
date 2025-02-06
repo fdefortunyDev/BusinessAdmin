@@ -7,10 +7,10 @@ import {
 import { CreateBusinessDto } from './dtos/create-business.dto';
 import { BusinessRepositoryService } from '../../repository/business/business.repository.service';
 import { UpdateBusinessDto } from './dtos/update-business.dto';
-import { BusinessError } from '../../utils/errors/business-error.enum';
+import { BusinessError } from '../../utils/enums/errors/business-error.enum';
 import { IBusiness } from '../../repository/business/dtos/out/business-response.dto';
 import { UsersRepositoryService } from '../../repository/users/users.repository.service';
-import { UsersError } from '../../utils/errors/users-error.enum';
+import { UsersError } from '../../utils/enums/errors/users-error.enum';
 import { IUser } from '../../repository/users/dtos/out/user-response.dto';
 import { IBusinessResponse } from './dtos/business-response.dto';
 
