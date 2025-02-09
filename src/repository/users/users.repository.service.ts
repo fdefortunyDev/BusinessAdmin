@@ -4,6 +4,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { User } from './entity/users.entity';
 import { IUser } from './dtos/out/user-response.dto';
 import { UserDataToCreate } from './dtos/in/user-data-to-create.dto';
+import { UserDataToUpdate } from './dtos/in/user-data.to-update.dto';
 
 @Injectable()
 export class UsersRepositoryService {
@@ -63,7 +64,7 @@ export class UsersRepositoryService {
 
   async updateOne(
     id: string,
-    userDataToUpdate: UserDataToCreate,
+    userDataToUpdate: UserDataToUpdate,
   ): Promise<boolean> {
     const result: UpdateResult = await this.usersModel.update(
       id,

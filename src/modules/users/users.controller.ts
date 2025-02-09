@@ -88,10 +88,10 @@ export class UsersController {
   @Patch('/:id/update')
   async update(
     @Param('id') id: string,
-    @Body() userDataToUpdate: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<IUserResponse> {
     try {
-      return await this.usersService.update(id, userDataToUpdate);
+      return await this.usersService.update(id, updateUserDto);
     } catch (error) {
       console.error(error);
       throw error;
