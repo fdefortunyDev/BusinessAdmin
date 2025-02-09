@@ -13,11 +13,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'varchar',
-    length: 255,
-    unique: true,
-  })
+  @Column({ type: 'varchar', length: 255, unique: true })
   cognitoId: string;
 
   @Column({ type: 'varchar', length: 20 })

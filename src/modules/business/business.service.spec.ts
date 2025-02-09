@@ -209,7 +209,7 @@ describe('BusinessService', () => {
           .mockResolvedValue(businessMock);
         jest
           .spyOn(businessRepositoryService, 'updateOne')
-          .mockResolvedValue(businessMock);
+          .mockResolvedValue(true);
 
         expect(
           businessService.update(businessMock.id, {
@@ -246,7 +246,7 @@ describe('BusinessService', () => {
           .mockResolvedValue(businessMock);
         jest
           .spyOn(businessRepositoryService, 'updateOne')
-          .mockResolvedValue(null as any);
+          .mockResolvedValue(false);
 
         expect(
           businessService.update(businessMock.id, {

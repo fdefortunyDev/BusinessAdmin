@@ -72,14 +72,15 @@ export class BusinessService {
       await this.businessRepositoryService.findAll();
 
     const response: IBusinessResponse[] = business.map((b) => {
+      const { id, name, address, email, phone, website, isActive } = b;
       return {
-        id: b.id,
-        name: b.name,
-        address: b.address,
-        email: b.email,
-        phone: b.phone,
-        website: b.website,
-        isActive: b.isActive,
+        id,
+        name,
+        address,
+        email,
+        phone,
+        website,
+        isActive,
       };
     });
 
@@ -93,14 +94,16 @@ export class BusinessService {
       throw new NotFoundException(BusinessError.notFound);
     }
 
-    const response = {
-      id: business.id,
-      name: business.name,
-      address: business.address,
-      email: business.email,
-      phone: business.phone,
-      website: business.website,
-      isActive: business.isActive,
+    const { name, address, email, phone, website, isActive } = business;
+
+    const response: IBusinessResponse = {
+      id,
+      name,
+      address,
+      email,
+      phone,
+      website,
+      isActive,
     };
 
     return response;
@@ -125,21 +128,25 @@ export class BusinessService {
     businessToUpdate.website =
       updateBusinessDto.website ?? businessToUpdate.website;
 
-    const updatedBusiness: IBusiness | null =
-      await this.businessRepositoryService.updateOne(businessToUpdate);
+    const isUpdated: boolean = await this.businessRepositoryService.updateOne(
+      businessToUpdate.id,
+      businessToUpdate,
+    );
 
-    if (!updatedBusiness) {
+    if (!isUpdated) {
       throw new ServiceUnavailableException(BusinessError.notUpdated);
     }
 
+    const { name, address, email, phone, website, isActive } = businessToUpdate;
+
     const response: IBusinessResponse = {
-      id: updatedBusiness.id,
-      name: updatedBusiness.name,
-      address: updatedBusiness.address,
-      email: updatedBusiness.email,
-      phone: updatedBusiness.phone,
-      website: updatedBusiness.website,
-      isActive: updatedBusiness.isActive,
+      id,
+      name,
+      address,
+      email,
+      phone,
+      website,
+      isActive,
     } as IBusinessResponse;
 
     return response;
@@ -159,13 +166,15 @@ export class BusinessService {
       throw new ServiceUnavailableException(BusinessError.notDisabled);
     }
 
+    const { name, address, email, phone, website } = business;
+
     const response: IBusinessResponse = {
-      id: business.id,
-      name: business.name,
-      address: business.address,
-      email: business.email,
-      phone: business.phone,
-      website: business.website,
+      id,
+      name,
+      address,
+      email,
+      phone,
+      website,
       isActive: false,
     };
 

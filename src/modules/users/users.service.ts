@@ -11,6 +11,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { IUser } from '../../repository/users/dtos/out/user-response.dto';
 import { UsersError } from '../../utils/enums/errors/users-error.enum';
 import { UserDataToUpdate } from '../../repository/users/dtos/in/user-data.to-update.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -31,8 +32,6 @@ export class UsersService {
     if (userExists) {
       throw new ConflictException(UsersError.alreadyExists);
     }
-
-    console.log(cognitoId);
 
     const createdUser: IUser | null =
       await this.usersRepositoryService.create(createUserDto);
@@ -97,7 +96,7 @@ export class UsersService {
 
   async update(
     id: string,
-    userDataToUpdate: UserDataToUpdate,
+    updateUserDto: UpdateUserDto,
   ): Promise<IUserResponse> {
     const user: IUser | null =
       await this.usersRepositoryService.findOneById(id);
@@ -106,7 +105,7 @@ export class UsersService {
       throw new NotFoundException(UsersError.notFound);
     }
 
-    const { firstName, lastName, phone, email, document } = userDataToUpdate;
+    const { firstName, lastName, phone, email, document } = updateUserDto;
 
     user.firstName = firstName ?? user.firstName;
     user.lastName = lastName ?? user.lastName;

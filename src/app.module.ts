@@ -25,7 +25,7 @@ import { CognitoService } from './modules/users/cognito/cognito.service';
         password: configService.getOrThrow('DB_PASS'),
         database: configService.getOrThrow('DB_NAME'),
         entities: [Business, User],
-        synchronize: configService.getOrThrow('NODE_ENV') !== 'production',
+        synchronize: false, //configService.getOrThrow('NODE_ENV') !== 'production',
       }),
     }),
     AuthModule,
