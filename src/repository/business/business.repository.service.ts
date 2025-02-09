@@ -2,15 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { IBusiness } from './dtos/out/business-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Business } from './entities/business.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { In, Repository, UpdateResult } from 'typeorm';
 import { BusinessDataToCreate } from './dtos/in/business-data-to-create.dto';
 import { BusinessDataToUpdate } from './dtos/in/business-data-to-update.dto';
+import { User } from '../users/entity/users.entity';
+import { UsersError } from '../../utils/enums/errors/users-error.enum';
 
 @Injectable()
 export class BusinessRepositoryService {
   constructor(
     @InjectRepository(Business)
     private readonly businessModel: Repository<Business>,
+    @InjectRepository(User)
+    private readonly userModel: Repository<User>,
   ) {}
 
   async create(businessData: BusinessDataToCreate): Promise<IBusiness> {
@@ -22,7 +26,14 @@ export class BusinessRepositoryService {
     business.email = email;
     business.phone = phone;
     business.website = website;
-    business.user = user;
+
+    const userEntity = await this.userModel.findOne({ where: { id: user.id } });
+
+    if (!userEntity) {
+      throw new Error(UsersError.notFound);
+    }
+
+    business.user = userEntity;
 
     return await this.businessModel.save(business);
   }
@@ -38,6 +49,10 @@ export class BusinessRepositoryService {
     return await this.businessModel.findOne({
       where: { id, isActive: true },
     });
+  }
+
+  async findByIds(ids: string[]): Promise<IBusiness[]> {
+    return await this.businessModel.find({ where: { id: In(ids) } });
   }
 
   async findOneByName(name: string): Promise<IBusiness | null> {

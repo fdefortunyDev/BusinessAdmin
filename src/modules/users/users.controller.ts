@@ -27,6 +27,7 @@ import { Roles } from '../auth/roles.decorator';
 import { Role } from '../../utils/enums/role.enum';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { Request } from 'express';
+import { AssociateBusinessToUserDto } from './dtos/associate-business-to-user.dto';
 
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard)
@@ -43,6 +44,25 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto): Promise<IUserResponse> {
     try {
       return await this.usersService.create(createUserDto);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  @ApiOperation({ summary: 'Associate business to user' })
+  @ApiCreatedResponse({ type: IUserResponse })
+  @ApiConflictResponse({ description: UsersError.alreadyExists })
+  @ApiServiceUnavailableResponse({ description: UsersError.notCreated })
+  @Roles(Role.SuperAdmin)
+  @Patch('/associate-businesses')
+  async associateBusinessesToUser(
+    @Body() associateBusinessDto: AssociateBusinessToUserDto,
+  ): Promise<IUserResponse> {
+    try {
+      return await this.usersService.associateBusinessesToUser(
+        associateBusinessDto,
+      );
     } catch (error) {
       console.error(error);
       throw error;

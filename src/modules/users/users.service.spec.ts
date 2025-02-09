@@ -12,6 +12,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { UsersError } from '../../utils/enums/errors/users-error.enum';
+import { BusinessRepositoryService } from '../../repository/business/business.repository.service';
 
 describe('UsersService', () => {
   const userMock: IUser = getUserMock();
@@ -27,9 +28,14 @@ describe('UsersService', () => {
 
   let usersService: UsersService;
   let usersRepositoryService: UsersRepositoryService;
+  let businessRepositoryService: BusinessRepositoryService;
 
   usersRepositoryService = mockAllMethods<UsersRepositoryService>(
     UsersRepositoryService,
+  );
+
+  businessRepositoryService = mockAllMethods<BusinessRepositoryService>(
+    BusinessRepositoryService,
   );
 
   afterAll(() => {
@@ -44,12 +50,18 @@ describe('UsersService', () => {
         if (token === UsersRepositoryService) {
           return usersRepositoryService;
         }
+        if (token === BusinessRepositoryService) {
+          return businessRepositoryService;
+        }
       })
       .compile();
 
     usersService = module.get<UsersService>(UsersService);
     usersRepositoryService = module.get<UsersRepositoryService>(
       UsersRepositoryService,
+    );
+    businessRepositoryService = module.get<BusinessRepositoryService>(
+      BusinessRepositoryService,
     );
   });
 

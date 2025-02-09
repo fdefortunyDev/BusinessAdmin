@@ -6,9 +6,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { IBusiness } from '../dtos/out/business-response.dto';
 import { User } from '../../users/entity/users.entity';
+import { Membership } from '../../memberships/entities/membership.entity';
 @Entity('business')
 export class Business implements IBusiness {
   @PrimaryGeneratedColumn('uuid')
@@ -39,6 +41,9 @@ export class Business implements IBusiness {
   updatedAt: Date;
 
   @ManyToOne(() => User, { nullable: false })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => Membership, (membership) => membership.business)
+  memberships: Membership[];
 }

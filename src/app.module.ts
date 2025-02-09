@@ -10,6 +10,8 @@ import { UsersModule } from './modules/users/users.module';
 import { User } from './repository/users/entity/users.entity';
 import { CognitoController } from './modules/users/cognito/cognito.controller';
 import { CognitoService } from './modules/users/cognito/cognito.service';
+import { MembershipsModule } from './modules/memberships/memberships.module';
+import { Membership } from './repository/memberships/entities/membership.entity';
 
 @Module({
   imports: [
@@ -24,14 +26,15 @@ import { CognitoService } from './modules/users/cognito/cognito.service';
         username: configService.getOrThrow('DB_USER'),
         password: configService.getOrThrow('DB_PASS'),
         database: configService.getOrThrow('DB_NAME'),
-        entities: [Business, User],
-        synchronize: false, //configService.getOrThrow('NODE_ENV') !== 'production',
+        entities: [Business, User, Membership],
+        synchronize: true, //configService.getOrThrow('NODE_ENV') !== 'production',
       }),
     }),
     AuthModule,
     RepositoryModule,
     BusinessModule,
     UsersModule,
+    MembershipsModule,
   ],
   controllers: [CognitoController],
   providers: [CognitoService],

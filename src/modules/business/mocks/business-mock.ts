@@ -13,5 +13,6 @@ export function getBusinessMock(): IBusiness {
     user: getUserMock(),
     createdAt: new Date(),
     updatedAt: new Date(),
+    memberships: [],
   };
 }

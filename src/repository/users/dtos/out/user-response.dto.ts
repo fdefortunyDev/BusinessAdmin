@@ -6,5 +6,5 @@ export interface IUser extends UserDataToCreate {
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean;
-  business: IBusiness[];
+  businesses: IBusiness[];
 }

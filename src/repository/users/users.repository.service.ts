@@ -5,6 +5,7 @@ import { User } from './entity/users.entity';
 import { IUser } from './dtos/out/user-response.dto';
 import { UserDataToCreate } from './dtos/in/user-data-to-create.dto';
 import { UserDataToUpdate } from './dtos/in/user-data.to-update.dto';
+import { IBusiness } from '../business/dtos/out/business-response.dto';
 
 @Injectable()
 export class UsersRepositoryService {
@@ -80,5 +81,13 @@ export class UsersRepositoryService {
       { isActive: false },
     );
     return result.affected && result.affected > 0 ? true : false;
+  }
+
+  async associateBusinessesToUser(
+    user: IUser,
+    businesses: IBusiness[],
+  ): Promise<IUser> {
+    user.businesses = businesses;
+    return await this.usersModel.save(user);
   }
 }

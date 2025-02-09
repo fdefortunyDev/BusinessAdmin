@@ -7,9 +7,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Business } from '../../business/entities/business.entity';
+import { IUser } from '../dtos/out/user-response.dto';
 
 @Entity('users')
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -40,6 +41,6 @@ export class User {
   @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 
-  @OneToMany(() => Business, (business) => business.user, { lazy: true })
-  business: Business[];
+  @OneToMany(() => Business, (business) => business.user)
+  businesses: Business[];
 }

@@ -4,6 +4,7 @@ export enum BusinessError {
   invalidEmail = 'business.error.invalidEmail',
   invalidPhone = 'business.error.invalidPhone',
   invalidWebsite = 'business.error.invalidWebsite',
+  invalidBusinessForThisUser = 'business.error.invalidBusinessForThisUser',
 
   notCreated = 'business.error.notCreated',
   notUpdated = 'business.error.notUpdated',

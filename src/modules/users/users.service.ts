@@ -10,13 +10,17 @@ import { IUserResponse } from './dtos/user.response';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { IUser } from '../../repository/users/dtos/out/user-response.dto';
 import { UsersError } from '../../utils/enums/errors/users-error.enum';
-import { UserDataToUpdate } from '../../repository/users/dtos/in/user-data.to-update.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { IBusiness } from '../../repository/business/dtos/out/business-response.dto';
+import { BusinessRepositoryService } from '../../repository/business/business.repository.service';
+import { BusinessError } from '../../utils/enums/errors/business-error.enum';
+import { AssociateBusinessToUserDto } from './dtos/associate-business-to-user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepositoryService: UsersRepositoryService,
+    private readonly businessRepositoryService: BusinessRepositoryService,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<IUserResponse> {
     const { cognitoId, document, email, phone } = createUserDto;
@@ -53,6 +57,36 @@ export class UsersService {
     return response;
   }
 
+  async associateBusinessesToUser(
+    associateBusinessDto: AssociateBusinessToUserDto,
+  ): Promise<IUserResponse> {
+    const { userId, businessIds } = associateBusinessDto;
+
+    const user: IUser | null =
+      await this.usersRepositoryService.findOneById(userId);
+
+    if (!user) {
+      throw new NotFoundException(UsersError.notFound);
+    }
+
+    const businessList: IBusiness[] =
+      await this.businessRepositoryService.findByIds(businessIds);
+
+    if (!businessList || businessList.length === 0) {
+      throw new Error(BusinessError.notFound);
+    }
+
+    const updatedUser: IUser =
+      await this.usersRepositoryService.associateBusinessesToUser(
+        user,
+        businessList,
+      );
+    const { businesses, ...rest } = updatedUser;
+    const response: IUserResponse = rest;
+
+    return response;
+  }
+
   async findAll(): Promise<IUserResponse[]> {
     const users: IUser[] = await this.usersRepositoryService.findAll();
     return users.map((user) => {
@@ -79,7 +113,6 @@ export class UsersService {
     if (user.cognitoId !== requestUser.sub) {
       throw new ForbiddenException();
     }
-    console.log(requestUser);
 
     const response: IUserResponse = {
       id: user.id,
