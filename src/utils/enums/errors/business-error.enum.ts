@@ -11,4 +11,5 @@ export enum BusinessError {
   notFound = 'business.error.notFound',
   notDisabled = 'business.error.notDisabled',
   alreadyExists = 'business.error.alreadyExists',
+  businessIdNotAssociableToUser = 'business.error.businessIdNotAssociableToUser',
 }

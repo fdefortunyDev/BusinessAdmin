@@ -2,15 +2,12 @@ import { MembershipPeriod } from '../../../../utils/enums/memberships/membership
 import { TimesPerWeek } from '../../../../utils/enums/memberships/times-per-week.enum';
 import { IBusiness } from '../../../business/dtos/out/business-response.dto';
 
-export interface IMembership {
-  id: string;
+export interface MembershipDataToCreate {
   name: string;
-  price: number;
-  period: MembershipPeriod;
-  timesPerWeek: TimesPerWeek;
-  daysOfWeek: string;
-  slots: number;
-  createdAt: Date;
-  updatedAt: Date;
   business: IBusiness;
+  period: MembershipPeriod;
+  daysOfWeek: string;
+  timesPerWeek: TimesPerWeek;
+  slots: number;
+  price: number;
 }

@@ -3,6 +3,7 @@ import { Transform } from 'class-transformer';
 import {
   IsNumberString,
   IsOptional,
+  IsUUID,
   Matches,
   MaxLength,
   MinLength,
@@ -11,6 +12,7 @@ import { UsersError } from '../../../utils/enums/errors/users-error.enum';
 
 export class CreateUserDto {
   @ApiProperty({ example: '' })
+  @IsUUID()
   @MaxLength(255, { message: UsersError.invalidCognitoId })
   @Transform(({ value }) => value.trim())
   cognitoId: string;

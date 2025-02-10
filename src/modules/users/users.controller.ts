@@ -85,7 +85,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get one user' })
   @ApiOkResponse({ type: IUserResponse })
   @ApiNotFoundResponse({ description: UsersError.notFound })
-  @Roles(Role.BusinessOwner, Role.BusinessUser)
+  @Roles(Role.BusinessOwner, Role.BusinessAdmin)
   @Get('/:id')
   async findOne(
     @Param('id') id: string,
@@ -104,7 +104,7 @@ export class UsersController {
   @ApiOkResponse({ type: IUserResponse })
   @ApiNotFoundResponse({ description: UsersError.notFound })
   @ApiServiceUnavailableResponse({ description: UsersError.notUpdated })
-  @Roles(Role.BusinessOwner, Role.BusinessUser)
+  @Roles(Role.BusinessOwner, Role.BusinessAdmin)
   @Patch('/:id/update')
   async update(
     @Param('id') id: string,

@@ -75,16 +75,20 @@ export class UsersService {
     if (!businessList || businessList.length === 0) {
       throw new Error(BusinessError.notFound);
     }
+    for(const business of businessList) {
+      if (await business.user.id !== userId) {
+        throw new ConflictException(BusinessError.businessIdNotAssociableToUser);
+      }
+    }
 
     const updatedUser: IUser =
       await this.usersRepositoryService.associateBusinessesToUser(
         user,
         businessList,
       );
-    const { businesses, ...rest } = updatedUser;
-    const response: IUserResponse = rest;
 
-    return response;
+    const { businesses, ...rest } = updatedUser;
+    return rest as IUserResponse;
   }
 
   async findAll(): Promise<IUserResponse[]> {
