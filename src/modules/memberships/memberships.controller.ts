@@ -10,36 +10,48 @@ import {
 import { MembershipsService } from './memberships.service';
 import { CreateMembershipDto } from './dto/create-membership.dto';
 import { UpdateMembershipDto } from './dto/update-membership.dto';
+import { Role } from '../../utils/enums/role.enum';
+import { Roles } from '../auth/roles.decorator';
 
 @Controller('memberships')
 export class MembershipsController {
   constructor(private readonly membershipsService: MembershipsService) {}
 
+  @Roles(Role.SuperAdmin, Role.BusinessOwner, Role.BusinessAdmin)
   @Post()
-  create(@Body() createMembershipDto: CreateMembershipDto) {
-    return this.membershipsService.create(createMembershipDto);
+  async create(@Body() createMembershipDto: CreateMembershipDto) {
+    try {
+      return await this.membershipsService.create(createMembershipDto);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
+  @Roles(Role.SuperAdmin, Role.BusinessOwner, Role.BusinessAdmin)
   @Get()
-  findAll() {
-    return this.membershipsService.findAll();
+  async findAll() {
+    return await this.membershipsService.findAll();
   }
 
+  @Roles(Role.SuperAdmin, Role.BusinessOwner, Role.BusinessAdmin)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.membershipsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.membershipsService.findOne(+id);
   }
 
+  @Roles(Role.SuperAdmin, Role.BusinessOwner, Role.BusinessAdmin)
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateMembershipDto: UpdateMembershipDto,
   ) {
-    return this.membershipsService.update(+id, updateMembershipDto);
+    return await this.membershipsService.update(+id, updateMembershipDto);
   }
 
+  @Roles(Role.SuperAdmin, Role.BusinessOwner, Role.BusinessAdmin)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.membershipsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.membershipsService.remove(+id);
   }
 }

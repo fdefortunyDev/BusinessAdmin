@@ -31,7 +31,7 @@ export class Business implements IBusiness {
   @Column({ type: 'varchar', length: 255, nullable: true, default: '' })
   website: string;
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
   @CreateDateColumn({ name: 'createdAt', type: 'datetime' })

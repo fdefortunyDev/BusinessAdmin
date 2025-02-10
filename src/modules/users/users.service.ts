@@ -81,10 +81,9 @@ export class UsersService {
         user,
         businessList,
       );
-    const { businesses, ...rest } = updatedUser;
-    const response: IUserResponse = rest;
 
-    return response;
+    const { businesses, ...rest } = updatedUser;
+    return rest as IUserResponse;
   }
 
   async findAll(): Promise<IUserResponse[]> {

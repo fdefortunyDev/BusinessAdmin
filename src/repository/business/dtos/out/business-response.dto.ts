@@ -12,5 +12,5 @@ export interface IBusiness {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  memberships?: IMembership[];
+  memberships: IMembership[];
 }
