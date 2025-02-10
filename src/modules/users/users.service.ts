@@ -75,9 +75,11 @@ export class UsersService {
     if (!businessList || businessList.length === 0) {
       throw new Error(BusinessError.notFound);
     }
-    for(const business of businessList) {
-      if (await business.user.id !== userId) {
-        throw new ConflictException(BusinessError.businessIdNotAssociableToUser);
+    for (const business of businessList) {
+      if ((await business.user.id) !== userId) {
+        throw new ConflictException(
+          BusinessError.businessIdNotAssociableToUser,
+        );
       }
     }
 
